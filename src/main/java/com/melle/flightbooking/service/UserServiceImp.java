@@ -1,5 +1,8 @@
 package com.melle.flightbooking.service;
 
+import com.melle.flightbooking.exception.EmailAlreadyExistsException;
+import com.melle.flightbooking.exception.EmailDoesNotExistException;
+import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
@@ -22,8 +25,7 @@ public class UserServiceImp implements UserService {
         boolean isEmailPresent = userRepository.existsByEmail(newUser.getEmail());
 
         if(isEmailPresent){
-            // Change to custom exception
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
         return userRepository.save(newUser);
     }
@@ -33,15 +35,13 @@ public class UserServiceImp implements UserService {
         boolean isEmailPresent = userRepository.existsByEmail(email);
 
         if(!isEmailPresent){
-            // Change to custom exception
-            throw new RuntimeException("Email does not exist");
+            throw new EmailDoesNotExistException("Email does not exist");
         }
 
         User user = userRepository.findUserByEmail(email);
 
         if(!Objects.equals(user.getPassword(), password)){
-            // Change to custom exception
-            throw new RuntimeException("Invalid credentials");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
         return user;
@@ -51,8 +51,7 @@ public class UserServiceImp implements UserService {
         boolean isEmailPresent = userRepository.existsByEmail(email);
 
         if(!isEmailPresent){
-            // Change to custom exception
-            throw new RuntimeException("Email not found");
+            throw new EmailDoesNotExistException("Email does not exist");
         }
 
         return Optional.ofNullable(userRepository.findUserByEmail(email));

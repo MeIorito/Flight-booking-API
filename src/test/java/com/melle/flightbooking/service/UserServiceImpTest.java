@@ -23,7 +23,7 @@ public class UserServiceImpTest {
     UserRepository userRepository;
 
     @InjectMocks
-    UserService userService;
+    UserServiceImp userService;
 
     @Test
     public void register_returnsRegisteredUser_whenRegistered(){
