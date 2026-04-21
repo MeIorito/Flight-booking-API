@@ -20,6 +20,7 @@ public class FlightController {
         return flightService.createFlight(flight);
     }
 
+    // Should not return Boolean
     @DeleteMapping("/flights/{id}")
     public boolean deleteFlight(@PathVariable int id){
         return flightService.deleteFlightById(id);

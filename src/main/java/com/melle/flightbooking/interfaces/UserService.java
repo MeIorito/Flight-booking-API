@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface UserService {
     User register(User user);
+    Boolean deleteUserById(Integer id);
     User login(String email, String password);
     Optional<User> findByEmail(String email);
     Iterable<User> getAllUsers();

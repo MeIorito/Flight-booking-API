@@ -6,6 +6,7 @@ import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,18 @@ public class UserServiceImp implements UserService {
             throw new EmailAlreadyExistsException("Email already exists");
         }
         return userRepository.save(newUser);
+    }
+
+    public Boolean deleteUserById(Integer id){
+        boolean isIdPresent = userRepository.existsById(id);
+
+        if(!isIdPresent){
+            // New IdNotFoundException
+            throw new EmailDoesNotExistException("Email does not exist");
+        }
+
+        userRepository.deleteById(id);
+        return true;
     }
 
     // HASHING!!
