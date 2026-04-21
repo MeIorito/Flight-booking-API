@@ -6,8 +6,8 @@ import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -16,10 +16,12 @@ import java.util.Optional;
 @Service
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository){
+    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User register(User newUser){
@@ -28,6 +30,9 @@ public class UserServiceImp implements UserService {
         if(isEmailPresent){
             throw new EmailAlreadyExistsException("Email already exists");
         }
+
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+
         return userRepository.save(newUser);
     }
 
@@ -43,7 +48,6 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    // HASHING!!
     public User login(String email, String password){
         boolean isEmailPresent = userRepository.existsByEmail(email);
 
@@ -53,7 +57,7 @@ public class UserServiceImp implements UserService {
 
         User user = userRepository.findUserByEmail(email);
 
-        if(!Objects.equals(user.getPassword(), password)){
+        if(!passwordEncoder.matches(password, user.getPassword())){
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
