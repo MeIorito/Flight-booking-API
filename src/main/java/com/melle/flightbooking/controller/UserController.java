@@ -1,13 +1,12 @@
 package com.melle.flightbooking.controller;
 
-import com.melle.flightbooking.dto.LoginRequestDto;
-import com.melle.flightbooking.dto.LoginResponseDto;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     private final UserServiceImp userService;
@@ -15,18 +14,10 @@ public class UserController {
     @Autowired
     public UserController(UserServiceImp userService){ this.userService = userService; }
 
-    @PostMapping("/users")
-    public User createUser(@RequestBody User user){ return this.userService.register(user); }
-
     // Should not return Boolean
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public Boolean deleteUser(@PathVariable Integer id){ return this.userService.deleteUserById(id); }
 
-    @PostMapping("/users/login")
-    public LoginResponseDto userLogin(@RequestBody LoginRequestDto loginRequest){
-        return this.userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-    }
-
-    @GetMapping("/users")
+    @GetMapping
     public Iterable<User> getAllUsers(){ return this.userService.getAllUsers();}
 }

@@ -24,8 +24,8 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException, java.io.IOException {
 
         // Laat voor nu login/register endpoint altijd door
-        if (request.getRequestURI().equals("/users/login") ||
-                (request.getRequestURI().equals("/users") && request.getMethod().equals("POST"))) {
+        if (request.getRequestURI().equals("/auth/register") ||
+                (request.getRequestURI().equals("/auth/login") && request.getMethod().equals("POST"))) {
             filterChain.doFilter(request, response);
             return;
         }
