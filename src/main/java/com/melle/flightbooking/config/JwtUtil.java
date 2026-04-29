@@ -20,7 +20,7 @@ public class JwtUtil {
     // "exp": 1710001800
 
     // Remove from here into env file
-    public static final String SECRET = "test";
+    public static final String SECRET = "1827364536728919203947462739405375647626253444624354635264";
 
 
     public String createToken(Map<String, Object> claims, String email){

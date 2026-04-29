@@ -1,5 +1,8 @@
 package com.melle.flightbooking.service;
 
+import com.melle.flightbooking.config.JwtFilter;
+import com.melle.flightbooking.config.JwtUtil;
+import com.melle.flightbooking.dto.LoginResponseDto;
 import com.melle.flightbooking.exception.EmailAlreadyExistsException;
 import com.melle.flightbooking.exception.EmailDoesNotExistException;
 import com.melle.flightbooking.exception.InvalidCredentialsException;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -17,11 +22,13 @@ import java.util.Optional;
 public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserServiceImp(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public User register(User newUser){
@@ -48,7 +55,7 @@ public class UserServiceImp implements UserService {
         return true;
     }
 
-    public User login(String email, String password){
+    public LoginResponseDto login(String email, String password){
         boolean isEmailPresent = userRepository.existsByEmail(email);
 
         if(!isEmailPresent){
@@ -61,7 +68,11 @@ public class UserServiceImp implements UserService {
             throw new InvalidCredentialsException("Invalid credentials");
         }
 
-        return user;
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("role", "user");
+        String jwtToken = jwtUtil.createToken(claims, email);
+
+        return new LoginResponseDto(user, jwtToken);
     }
 
     public Optional<User> findByEmail(String email){

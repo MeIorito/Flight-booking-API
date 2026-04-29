@@ -1,6 +1,7 @@
 package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.LoginRequestDto;
+import com.melle.flightbooking.dto.LoginResponseDto;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class UserController {
     public Boolean deleteUser(@PathVariable Integer id){ return this.userService.deleteUserById(id); }
 
     @PostMapping("/users/login")
-    public User userLogin(@RequestBody LoginRequestDto loginRequest){
+    public LoginResponseDto userLogin(@RequestBody LoginRequestDto loginRequest){
         return this.userService.login(loginRequest.getEmail(), loginRequest.getPassword());
     }
 
