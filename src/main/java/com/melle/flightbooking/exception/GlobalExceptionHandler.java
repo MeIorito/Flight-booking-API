@@ -37,4 +37,10 @@ public class GlobalExceptionHandler {
         ErrorResponse error = new ErrorResponse(HttpStatus.UNAUTHORIZED, e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+    @ExceptionHandler(IdDoesNotExistException.class)
+    public ResponseEntity<ErrorResponse> handle(IdDoesNotExistException e){
+        ErrorResponse error = new ErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
 }
