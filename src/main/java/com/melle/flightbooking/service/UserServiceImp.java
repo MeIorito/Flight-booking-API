@@ -1,10 +1,10 @@
 package com.melle.flightbooking.service;
 
-import com.melle.flightbooking.config.JwtFilter;
 import com.melle.flightbooking.config.JwtUtil;
 import com.melle.flightbooking.dto.LoginResponseDto;
 import com.melle.flightbooking.exception.EmailAlreadyExistsException;
 import com.melle.flightbooking.exception.EmailDoesNotExistException;
+import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.User;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -47,8 +46,7 @@ public class UserServiceImp implements UserService {
         boolean isIdPresent = userRepository.existsById(id);
 
         if(!isIdPresent){
-            // New IdNotFoundException
-            throw new EmailDoesNotExistException("Email does not exist");
+            throw new IdDoesNotExistException("Id does not exist");
         }
 
         userRepository.deleteById(id);
