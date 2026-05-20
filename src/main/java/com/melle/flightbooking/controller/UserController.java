@@ -1,5 +1,6 @@
 package com.melle.flightbooking.controller;
 
+import com.melle.flightbooking.dto.UserSummaryDto;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,5 +20,5 @@ public class UserController {
     public Boolean deleteUser(@PathVariable Integer id){ return this.userService.deleteUserById(id); }
 
     @GetMapping
-    public Iterable<User> getAllUsers(){ return this.userService.getAllUsers();}
+    public Iterable<UserSummaryDto> getAllUsers(){ return this.userService.getAllUsers();}
 }

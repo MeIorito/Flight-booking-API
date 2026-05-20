@@ -2,6 +2,7 @@ package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.config.JwtUtil;
 import com.melle.flightbooking.dto.LoginResponseDto;
+import com.melle.flightbooking.dto.UserSummaryDto;
 import com.melle.flightbooking.exception.EmailAlreadyExistsException;
 import com.melle.flightbooking.exception.EmailDoesNotExistException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
@@ -83,7 +84,7 @@ public class UserServiceImp implements UserService {
         return Optional.ofNullable(userRepository.findUserByEmail(email));
     }
 
-    public Iterable<User> getAllUsers(){
-        return userRepository.findAll();
+    public Iterable<UserSummaryDto> getAllUsers(){
+        return userRepository.findBy(UserSummaryDto.class);
     }
 }
