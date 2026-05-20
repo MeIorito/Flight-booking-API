@@ -31,7 +31,7 @@ public class UserServiceImp implements UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public User register(User newUser){
+    public UserSummaryDto register(User newUser){
         boolean isEmailPresent = userRepository.existsByEmail(newUser.getEmail());
 
         if(isEmailPresent){
@@ -40,7 +40,9 @@ public class UserServiceImp implements UserService {
 
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
 
-        return userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
+        
+        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
     }
 
     public Boolean deleteUserById(Integer id){
@@ -71,7 +73,9 @@ public class UserServiceImp implements UserService {
         claims.put("role", "user");
         String jwtToken = jwtUtil.createToken(claims, email);
 
-        return new LoginResponseDto(user, jwtToken);
+
+
+        return new LoginResponseDto(new UserSummaryDto(user.getId(), user.getUsername(), user.getEmail()), jwtToken);
     }
 
     public Optional<User> findByEmail(String email){

@@ -3,19 +3,19 @@ package com.melle.flightbooking.dto;
 import com.melle.flightbooking.model.User;
 
 public class LoginResponseDto {
-    private User user;
+    private UserSummaryDto user;
     private String jwtToken;
 
-    public LoginResponseDto(User user, String jwtToken){
+    public LoginResponseDto(UserSummaryDto user, String jwtToken){
         this.user = user;
         this.jwtToken = jwtToken;
     }
 
-    public User getUser() {
+    public UserSummaryDto getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserSummaryDto user) {
         this.user = user;
     }
 

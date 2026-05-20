@@ -2,6 +2,7 @@ package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.LoginRequestDto;
 import com.melle.flightbooking.dto.LoginResponseDto;
+import com.melle.flightbooking.dto.UserSummaryDto;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class AuthController {
     public AuthController(UserServiceImp userService){ this.userService = userService; }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public UserSummaryDto register(@RequestBody User user) {
         return userService.register(user);
     }
 
