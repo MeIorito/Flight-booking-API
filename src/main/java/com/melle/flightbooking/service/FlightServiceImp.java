@@ -21,15 +21,16 @@ public class FlightServiceImp implements FlightService {
         return flightRepository.save(newFlight);
     }
 
+    public Flight updateFlightById(Flight flight) {
+        idIsPresent(flight.getId());
+        return flightRepository.save(flight);
+    }
+
     @Override
     public boolean deleteFlightById(Integer id) {
-        boolean idIsPresent = flightRepository.existsById(id);
-
-        if (!idIsPresent){
-            throw new FlightNotFoundException("Flight with id: " + id + " does not exist");
-        }
+        idIsPresent(id);
         flightRepository.deleteById(id);
-        return idIsPresent;
+        return true;
     }
 
     @Override
@@ -41,5 +42,13 @@ public class FlightServiceImp implements FlightService {
     @Override
     public Iterable<Flight> getAllFlights() {
         return flightRepository.findAll();
+    }
+
+    private void idIsPresent(Integer id) {
+        boolean idIsPresent = flightRepository.existsById(id);
+
+        if (!idIsPresent){
+            throw new FlightNotFoundException("Flight with id: " + id + " does not exist");
+        }
     }
 }

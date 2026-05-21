@@ -4,6 +4,7 @@ import com.melle.flightbooking.model.Flight;
 
 public interface FlightService {
     Flight createFlight(Flight flight);
+    Flight updateFlightById(Flight flight);
     boolean deleteFlightById(Integer id);
     Flight getFlightById(Integer id);
     Iterable<Flight> getAllFlights();
