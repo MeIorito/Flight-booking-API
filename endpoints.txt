@@ -10,8 +10,9 @@
         /DELETE/api/v1/flights/{id}
         /GET/api/v1/flights
         /GET/api/v1/flights/{id}
-    -IN DEVELOPMENT
         /PUT/api/v1/flights/{id}
+    -IN DEVELOPMENT
+        /GET/api/v1/flights/{origin}/{destination}
         /GET/api/v1/flights/{origin}/{destination}/{date}
 
 
