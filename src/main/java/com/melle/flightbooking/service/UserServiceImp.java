@@ -73,10 +73,8 @@ public class UserServiceImp implements UserService {
         }
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", "user");
+        claims.put("role", user.getRole());
         String jwtToken = jwtUtil.createToken(claims, email);
-
-
 
         return new LoginResponseDto(new UserSummaryDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole()), jwtToken);
     }
