@@ -8,6 +8,7 @@ import com.melle.flightbooking.exception.EmailDoesNotExistException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.interfaces.UserService;
+import com.melle.flightbooking.model.RoleEnum;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class UserServiceImp implements UserService {
         this.jwtUtil = jwtUtil;
     }
 
+    // Public register endpoint, creates user with default role "user"
     public UserSummaryDto register(User newUser){
         boolean isEmailPresent = userRepository.existsByEmail(newUser.getEmail());
 
@@ -39,10 +41,11 @@ public class UserServiceImp implements UserService {
         }
 
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        newUser.setRole(RoleEnum.USER);
 
         User savedUser = userRepository.save(newUser);
         
-        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
+        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
     }
 
     public Boolean deleteUserById(Integer id){
@@ -75,7 +78,7 @@ public class UserServiceImp implements UserService {
 
 
 
-        return new LoginResponseDto(new UserSummaryDto(user.getId(), user.getUsername(), user.getEmail()), jwtToken);
+        return new LoginResponseDto(new UserSummaryDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole()), jwtToken);
     }
 
     public Optional<User> findByEmail(String email){

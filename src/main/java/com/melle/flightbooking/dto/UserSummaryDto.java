@@ -1,3 +1,5 @@
 package com.melle.flightbooking.dto;
 
-public record UserSummaryDto(Integer id, String username, String email) {}
+import com.melle.flightbooking.model.RoleEnum;
+
+public record UserSummaryDto(Integer id, String username, String email, RoleEnum role) {}
