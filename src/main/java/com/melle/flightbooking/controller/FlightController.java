@@ -3,6 +3,7 @@ package com.melle.flightbooking.controller;
 import com.melle.flightbooking.service.FlightServiceImp;
 import com.melle.flightbooking.model.Flight;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,12 +16,14 @@ public class FlightController {
         this.flightService = flightService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/flights")
     public Flight createFlight(@RequestBody Flight flight) {
         return flightService.createFlight(flight);
     }
 
     // Should not return Boolean
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/flights/{id}")
     public boolean deleteFlight(@PathVariable int id){
         return flightService.deleteFlightById(id);
@@ -35,6 +38,4 @@ public class FlightController {
     public Flight getFlightById(@PathVariable int id){
         return flightService.getFlightById(id);
     }
-
-
 }
