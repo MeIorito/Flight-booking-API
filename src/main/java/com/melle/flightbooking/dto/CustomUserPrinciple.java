@@ -1,11 +1,11 @@
 package com.melle.flightbooking.dto;
 
-public class CustomUserPrincipal {
+public class CustomUserPrinciple {
 
     private Integer id;
     private String email;
 
-    public CustomUserPrincipal(Integer id, String email) {
+    public CustomUserPrinciple(Integer id, String email) {
         this.id = id;
         this.email = email;
     }

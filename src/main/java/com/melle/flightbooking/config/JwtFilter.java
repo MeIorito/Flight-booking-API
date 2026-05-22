@@ -1,6 +1,6 @@
 package com.melle.flightbooking.config;
 
-import com.melle.flightbooking.dto.CustomUserPrincipal;
+import com.melle.flightbooking.dto.CustomUserPrinciple;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -46,7 +46,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         Claims claims = jwtUtil.extractClaims(token);
 
-        CustomUserPrincipal principle = new CustomUserPrincipal(
+        CustomUserPrinciple principle = new CustomUserPrinciple(
                 claims.get("id", Integer.class),
                 claims.getSubject()
         );

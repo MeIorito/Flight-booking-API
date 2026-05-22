@@ -1,13 +1,9 @@
 package com.melle.flightbooking.controller;
 
-import com.melle.flightbooking.dto.CustomUserPrincipal;
-import com.melle.flightbooking.dto.UpdateUsernameDto;
-import com.melle.flightbooking.dto.UserSummaryDto;
-import com.melle.flightbooking.model.User;
+import com.melle.flightbooking.dto.*;
 import com.melle.flightbooking.service.UserServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,14 +17,24 @@ public class UserController {
     public UserController(UserServiceImp userService){ this.userService = userService; }
 
     @PutMapping("/me/username")
-    public UserSummaryDto updateUser(@RequestBody UpdateUsernameDto username) {
-        CustomUserPrincipal user =
-                (CustomUserPrincipal) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal();
+    public UserSummaryDto updateUsername(@RequestBody UpdateUsernameDto username) {
+        CustomUserPrinciple user = getUserPrinciple();
 
         return this.userService.updateUsernameById(user.getId(), username.getUsername());
+    }
+
+    @PutMapping("/me/email")
+    public UserSummaryDto updateEmail(@RequestBody UpdateEmailDto email) {
+        CustomUserPrinciple user = getUserPrinciple();
+
+        return this.userService.updateEmailById(user.getId(), email.getEmail());
+    }
+
+    @PutMapping("/me/password")
+    public UserSummaryDto updatePassword(@RequestBody UpdatePasswordDto password) {
+        CustomUserPrinciple user = getUserPrinciple();
+
+        return this.userService.updatePasswordById(user.getId(), password.getPassword());
     }
 
     // Should not return Boolean
@@ -39,4 +45,11 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public Iterable<UserSummaryDto> getAllUsers(){ return this.userService.getAllUsers();}
+
+    private CustomUserPrinciple getUserPrinciple() {
+        return (CustomUserPrinciple) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+    }
 }
