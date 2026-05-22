@@ -16,6 +16,10 @@ public class UserController {
     @Autowired
     public UserController(UserServiceImp userService){ this.userService = userService; }
 
+    /*
+    USER AND ABOVE ONLY ENDPOINTS
+     */
+
     @PutMapping("/me/username")
     public UserSummaryDto updateUsername(@RequestBody UpdateUsernameDto username) {
         CustomUserPrinciple user = getUserPrinciple();
@@ -37,6 +41,31 @@ public class UserController {
         return this.userService.updatePasswordById(user.getId(), password.getPassword());
     }
 
+    /*
+    ADMIN AND ABOVE ONLY ENDPOINTS
+     */
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/admin/username")
+    public UserSummaryDto updateUsernameAdmin(@RequestBody UpdateUsernameAdminDto username) {
+
+        return this.userService.updateUsernameById(username.getId(), username.getUsername());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/admin/email")
+    public UserSummaryDto updateEmailAdmin(@RequestBody UpdateEmailAdminDto email) {
+
+        return this.userService.updateEmailById(email.getId(), email.getEmail());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/admin/password")
+    public UserSummaryDto updatePasswordAdmin(@RequestBody UpdatePasswordAdminDto password) {
+
+        return this.userService.updatePasswordById(password.getId(), password.getPassword());
+    }
+
     // Should not return Boolean
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
@@ -45,6 +74,10 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public Iterable<UserSummaryDto> getAllUsers(){ return this.userService.getAllUsers();}
+
+    /*
+    HELPER FUNCTIONS
+     */
 
     private CustomUserPrinciple getUserPrinciple() {
         return (CustomUserPrinciple) SecurityContextHolder
