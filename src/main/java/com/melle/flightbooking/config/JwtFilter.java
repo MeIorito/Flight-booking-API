@@ -1,5 +1,6 @@
 package com.melle.flightbooking.config;
 
+import com.melle.flightbooking.dto.CustomUserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
@@ -45,7 +46,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
         Claims claims = jwtUtil.extractClaims(token);
 
-        String email = claims.getSubject();
+        CustomUserPrincipal principle = new CustomUserPrincipal(
+                claims.get("id", Integer.class),
+                claims.getSubject()
+        );
+
         String role = claims.get("role", String.class);
 
         List<SimpleGrantedAuthority> authorities = List.of(
@@ -53,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
         );
 
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                email,
+                principle,
                 null,
                 authorities
         );
