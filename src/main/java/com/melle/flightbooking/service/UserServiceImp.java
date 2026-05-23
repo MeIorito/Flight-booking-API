@@ -2,6 +2,7 @@ package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.config.JwtUtil;
 import com.melle.flightbooking.dto.LoginResponseDto;
+import com.melle.flightbooking.dto.RegisterRequestDto;
 import com.melle.flightbooking.dto.UserSummaryDto;
 import com.melle.flightbooking.exception.*;
 import com.melle.flightbooking.interfaces.UserService;
@@ -29,14 +30,18 @@ public class UserServiceImp implements UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    public UserSummaryDto register(User newUser){
-        boolean isEmailPresent = userRepository.existsByEmail(newUser.getEmail());
+    public UserSummaryDto register(RegisterRequestDto request){
+        boolean isEmailPresent = userRepository.existsByEmail(request.getEmail());
 
         if(isEmailPresent){
             throw new EmailAlreadyExistsException("Email already exists");
         }
 
-        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
+        User newUser = new User();
+
+        newUser.setUsername(request.getUsername());
+        newUser.setEmail(request.getEmail());
+        newUser.setPassword(passwordEncoder.encode(request.getPassword()));
         newUser.setRole(RoleEnum.USER);
 
         User savedUser = userRepository.save(newUser);
