@@ -1,4 +1,4 @@
-package com.melle.flightbooking.dto;
+package com.melle.flightbooking.dto.user;
 
 import static com.melle.flightbooking.config.ValidationConstants.* ;
 

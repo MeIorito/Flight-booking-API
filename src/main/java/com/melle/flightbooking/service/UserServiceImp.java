@@ -1,9 +1,9 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.config.JwtUtil;
-import com.melle.flightbooking.dto.LoginResponseDto;
-import com.melle.flightbooking.dto.RegisterRequestDto;
-import com.melle.flightbooking.dto.UserSummaryDto;
+import com.melle.flightbooking.dto.auth.LoginResponseDto;
+import com.melle.flightbooking.dto.auth.RegisterRequestDto;
+import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.exception.*;
 import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.RoleEnum;

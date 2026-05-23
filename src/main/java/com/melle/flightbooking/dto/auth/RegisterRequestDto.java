@@ -1,4 +1,4 @@
-package com.melle.flightbooking.dto;
+package com.melle.flightbooking.dto.auth;
 
 import static com.melle.flightbooking.config.ValidationConstants.* ;
 import jakarta.validation.constraints.Email;

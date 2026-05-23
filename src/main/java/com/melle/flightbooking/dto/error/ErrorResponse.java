@@ -1,4 +1,4 @@
-package com.melle.flightbooking.exception;
+package com.melle.flightbooking.dto.error;
 
 import org.springframework.http.HttpStatus;
 

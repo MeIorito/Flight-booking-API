@@ -1,6 +1,6 @@
-package com.melle.flightbooking.dto;
+package com.melle.flightbooking.dto.auth;
 
-import com.melle.flightbooking.model.User;
+import com.melle.flightbooking.dto.user.UserSummaryDto;
 
 public class LoginResponseDto {
     private UserSummaryDto user;

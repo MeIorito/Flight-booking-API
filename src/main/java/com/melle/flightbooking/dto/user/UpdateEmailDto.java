@@ -1,4 +1,4 @@
-package com.melle.flightbooking.dto;
+package com.melle.flightbooking.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

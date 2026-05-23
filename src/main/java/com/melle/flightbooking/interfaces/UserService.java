@@ -1,8 +1,8 @@
 package com.melle.flightbooking.interfaces;
 
-import com.melle.flightbooking.dto.LoginResponseDto;
-import com.melle.flightbooking.dto.RegisterRequestDto;
-import com.melle.flightbooking.dto.UserSummaryDto;
+import com.melle.flightbooking.dto.auth.LoginResponseDto;
+import com.melle.flightbooking.dto.auth.RegisterRequestDto;
+import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.model.RoleEnum;
 import com.melle.flightbooking.model.User;
 

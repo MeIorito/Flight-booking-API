@@ -1,6 +1,4 @@
-package com.melle.flightbooking.dto;
-
-import jakarta.validation.constraints.*;
+package com.melle.flightbooking.dto.auth;
 
 public class LoginRequestDto {
 

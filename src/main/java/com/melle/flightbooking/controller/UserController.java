@@ -1,6 +1,13 @@
 package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.*;
+import com.melle.flightbooking.dto.user.UpdateEmailAdminDto;
+import com.melle.flightbooking.dto.user.UpdatePasswordAdminDto;
+import com.melle.flightbooking.dto.user.UpdateUsernameAdminDto;
+import com.melle.flightbooking.dto.user.UserSummaryDto;
+import com.melle.flightbooking.dto.user.UpdateEmailDto;
+import com.melle.flightbooking.dto.user.UpdatePasswordDto;
+import com.melle.flightbooking.dto.user.UpdateUsernameDto;
 import com.melle.flightbooking.service.UserServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
