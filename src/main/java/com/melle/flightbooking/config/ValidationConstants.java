@@ -17,4 +17,6 @@ public final class ValidationConstants {
     public static final String  USERNAME_REGEXP = "^[a-zA-Z0-9_]+$";
     public static final int USERNAME_MIN = 3;
     public static final int USERNAME_MAX = 12;
+
+    public static final String ID_BLANK_MESSAGE = "Id must not be blank";
 }

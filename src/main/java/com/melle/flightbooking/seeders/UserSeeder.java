@@ -34,7 +34,7 @@ public class UserSeeder implements CommandLineRunner {
         User user = new User();
         user.setUsername("user");
         user.setEmail("User@gmail.com");
-        user.setPassword(passwordEncoder.encode("user123"));
+        user.setPassword(passwordEncoder.encode("user1234"));
         user.setRole(RoleEnum.USER);
 
         userRepository.save(admin);

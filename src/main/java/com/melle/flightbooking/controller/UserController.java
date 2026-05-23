@@ -2,6 +2,7 @@ package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.*;
 import com.melle.flightbooking.service.UserServiceImp;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,21 +22,21 @@ public class UserController {
      */
 
     @PutMapping("/me/username")
-    public UserSummaryDto updateUsername(@RequestBody UpdateUsernameDto username) {
+    public UserSummaryDto updateUsername(@Valid @RequestBody UpdateUsernameDto username) {
         CustomUserPrinciple user = getUserPrinciple();
 
         return this.userService.updateUsernameById(user.getId(), username.getUsername());
     }
 
     @PutMapping("/me/email")
-    public UserSummaryDto updateEmail(@RequestBody UpdateEmailDto email) {
+    public UserSummaryDto updateEmail(@Valid @RequestBody UpdateEmailDto email) {
         CustomUserPrinciple user = getUserPrinciple();
 
         return this.userService.updateEmailById(user.getId(), email.getEmail());
     }
 
     @PutMapping("/me/password")
-    public UserSummaryDto updatePassword(@RequestBody UpdatePasswordDto password) {
+    public UserSummaryDto updatePassword(@Valid @RequestBody UpdatePasswordDto password) {
         CustomUserPrinciple user = getUserPrinciple();
 
         return this.userService.updatePasswordById(user.getId(), password.getPassword());
@@ -47,21 +48,21 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/username")
-    public UserSummaryDto updateUsernameAdmin(@RequestBody UpdateUsernameAdminDto username) {
+    public UserSummaryDto updateUsernameAdmin(@Valid @RequestBody UpdateUsernameAdminDto username) {
 
         return this.userService.updateUsernameById(username.getId(), username.getUsername());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/email")
-    public UserSummaryDto updateEmailAdmin(@RequestBody UpdateEmailAdminDto email) {
+    public UserSummaryDto updateEmailAdmin(@Valid @RequestBody UpdateEmailAdminDto email) {
 
         return this.userService.updateEmailById(email.getId(), email.getEmail());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/password")
-    public UserSummaryDto updatePasswordAdmin(@RequestBody UpdatePasswordAdminDto password) {
+    public UserSummaryDto updatePasswordAdmin(@Valid @RequestBody UpdatePasswordAdminDto password) {
 
         return this.userService.updatePasswordById(password.getId(), password.getPassword());
     }
