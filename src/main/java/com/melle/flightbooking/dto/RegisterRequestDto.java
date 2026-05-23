@@ -1,28 +1,29 @@
 package com.melle.flightbooking.dto;
 
+import static com.melle.flightbooking.config.ValidationConstants.* ;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegisterRequestDto {
-    @NotBlank(message = "Username must not be blank")
-    @Size(min = 3, max = 12, message = "Username length must be 3 to 12 characters")
+    @NotBlank(message = USERNAME_BLANK_MESSAGE)
+    @Size(min = USERNAME_MIN, max = USERNAME_MAX, message = USERNAME_SIZE_MESSAGE)
     @Pattern(
-            regexp = "^[a-zA-Z0-9_]+$",
-            message = "Username may only contain letters, numbers and underscores"
+            regexp = USERNAME_REGEXP,
+            message = USERNAME_REGEXP_MESSAGE
     )
     private String username;
 
-    @NotBlank(message = "Email must not be blank")
-    @Email(message = "Email must be valid")
+    @NotBlank(message = EMAIL_BLANK_MESSAGE)
+    @Email(message = EMAIL_VALID_MESSAGE)
     private String email;
 
-    @NotBlank(message = "Password must not be blank")
-    @Size(min = 8, max = 20, message = "Password must be 8 to 20 characters")
+    @NotBlank(message = PASSWORD_BLANK_MESSAGE)
+    @Size(min = PASSWORD_MIN, max = PASSWORD_MAX, message = PASSWORD_SIZE_MESSAGE)
     @Pattern(
-            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$",
-            message = "Password must contain uppercase, lowercase and a number"
+            regexp = PASSWORD_REGEXP,
+            message = PASSWORD_REGEXP_MESSAGE
     )
     private String password;
 
