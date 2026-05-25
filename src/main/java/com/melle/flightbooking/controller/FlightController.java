@@ -1,7 +1,8 @@
 package com.melle.flightbooking.controller;
 
+import com.melle.flightbooking.dto.flight.*;
 import com.melle.flightbooking.service.FlightServiceImp;
-import com.melle.flightbooking.model.Flight;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +20,33 @@ public class FlightController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
-    public Flight createFlight(@RequestBody Flight flight) {
+    public FlightSummaryDto createFlight(@Valid @RequestBody RegisterFlightDto flight) {
         return flightService.createFlight(flight);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping()
-    public Flight updateFlightById(@RequestBody Flight flight) { return flightService.updateFlightById(flight); }
+    @PutMapping("/origin")
+    public FlightSummaryDto updateOriginById(@Valid @RequestBody UpdateOriginDto request) {
+        return this.flightService.updateOriginById(request.getId(), request.getOrigin());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/destination")
+    public FlightSummaryDto updateDestinationById(@Valid @RequestBody UpdateDestinationDto request) {
+        return this.flightService.updateDestinationById(request.getId(), request.getDestination());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/date")
+    public FlightSummaryDto updateDateById(@Valid @RequestBody UpdateDateDto request) {
+        return this.flightService.updateDateById(request.getId(), request.getDate());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/seats")
+    public FlightSummaryDto updateSeatsById(@Valid @RequestBody UpdateSeatsDto request) {
+        return this.flightService.updateSeatsById(request.getId(), request.getSeats());
+    }
 
     // Should not return Boolean
     @PreAuthorize("hasRole('ADMIN')")
@@ -35,12 +56,12 @@ public class FlightController {
     }
 
     @GetMapping()
-    public Iterable<Flight> getAllFlights(){
+    public Iterable<FlightSummaryDto> getAllFlights(){
         return flightService.getAllFlights();
     }
 
     @GetMapping("/{id}")
-    public Flight getFlightById(@PathVariable int id){
+    public FlightSummaryDto getFlightById(@PathVariable int id){
         return flightService.getFlightById(id);
     }
 }

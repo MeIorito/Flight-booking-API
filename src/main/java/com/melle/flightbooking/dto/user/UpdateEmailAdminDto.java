@@ -4,9 +4,10 @@ import static com.melle.flightbooking.config.ValidationConstants.*;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UpdateEmailAdminDto {
-    @NotBlank(message = ID_BLANK_MESSAGE)
+    @NotNull(message = ID_BLANK_MESSAGE)
     private Integer id;
 
     @NotBlank(message = EMAIL_BLANK_MESSAGE)

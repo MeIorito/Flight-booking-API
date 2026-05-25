@@ -14,7 +14,7 @@ public class Flight {
     private String origin;
     private String destination;
     private String date;
-    private int seats;
+    private Integer seats;
 
     public Flight() {}
 
@@ -58,11 +58,11 @@ public class Flight {
         this.date = date;
     }
 
-    public int getSeats() {
+    public Integer getSeats() {
         return seats;
     }
 
-    public void setSeats(int seats) {
+    public void setSeats(Integer seats) {
         this.seats = seats;
     }
 }

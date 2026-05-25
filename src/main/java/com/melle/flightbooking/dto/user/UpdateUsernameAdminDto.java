@@ -1,13 +1,14 @@
 package com.melle.flightbooking.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import static com.melle.flightbooking.config.ValidationConstants.* ;
 
 public class UpdateUsernameAdminDto {
-    @NotBlank(message = ID_BLANK_MESSAGE)
+    @NotNull(message = ID_BLANK_MESSAGE)
     private Integer id;
 
     @NotBlank(message = USERNAME_BLANK_MESSAGE)

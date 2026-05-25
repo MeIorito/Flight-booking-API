@@ -19,4 +19,22 @@ public final class ValidationConstants {
     public static final int USERNAME_MAX = 12;
 
     public static final String ID_BLANK_MESSAGE = "Id must not be blank";
+
+    public static final String ORIGIN_BLANK_MESSAGE = "Origin must not be blank";
+    public static final String ORIGIN_SIZE_MESSAGE = "Origin length must be 2 to 50 characters";
+    public static final int ORIGIN_MIN = 2;
+    public static final int ORIGIN_MAX = 50;
+
+    public static final String DESTINATION_BLANK_MESSAGE = "Destination must not be blank";
+    public static final String DESTINATION_SIZE_MESSAGE = "Destination length must be 2 to 50 characters";
+    public static final int DESTINATION_MIN = 2;
+    public static final int DESTINATION_MAX = 50;
+
+    public static final String DATE_BLANK_MESSAGE = "Date must not be blank";
+
+    public static final String SEATS_NULL_MESSAGE = "Seats must not be null";
+    public static final String SEATS_MIN_MESSAGE = "Seats must be at least 1";
+    public static final String SEATS_MAX_MESSAGE = "Seats must not exceed 1000";
+    public static final int SEATS_MIN = 1;
+    public static final int SEATS_MAX = 1000;
 }
