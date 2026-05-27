@@ -3,6 +3,7 @@ package com.melle.flightbooking.controller;
 import com.melle.flightbooking.dto.CustomUserPrinciple;
 import com.melle.flightbooking.dto.booking.BookingSummaryDto;
 import com.melle.flightbooking.dto.booking.RegisterBookingDto;
+import com.melle.flightbooking.dto.booking.UpdateBookingFlightDto;
 import com.melle.flightbooking.dto.booking.UpdateBookingUserDto;
 import com.melle.flightbooking.service.BookingServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,6 @@ public class BookingController {
     public BookingSummaryDto createBooking(@RequestBody RegisterBookingDto request){
         CustomUserPrinciple user = getUserPrinciple();
 
-        System.out.println(user.getId());
-        System.out.println(request.getFlightId());
-
         return bookingService.createBooking(user.getId(), request);
     }
 
@@ -39,10 +37,16 @@ public class BookingController {
     public BookingSummaryDto updateBookingUser(@RequestBody UpdateBookingUserDto request){
         return bookingService.updateBookingUser(request);
     }
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @DeleteMapping()
-//    public BookingSummaryDto deleteBooking(){}
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/flight")
+    public BookingSummaryDto updateBookingFlight(@RequestBody UpdateBookingFlightDto request){
+        return bookingService.updateBookingFlight(request);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping()
+    public BookingSummaryDto deleteBooking(){}
 //
 //    @PreAuthorize("hasRole('USER')")
 //    @GetMapping()
