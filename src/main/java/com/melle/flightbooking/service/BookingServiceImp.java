@@ -69,6 +69,7 @@ public class BookingServiceImp implements BookingService {
                 .orElseThrow(() -> new IdDoesNotExistException("User with id: " + userId + " does not exist"));
 
         booking.setUser(user);
+        booking.setBookedAt(LocalDateTime.now());
         Booking savedBooking = bookingRepository.save(booking);
 
         return createBookingSummaryDto(savedBooking);
