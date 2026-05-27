@@ -54,6 +54,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
+    @ExceptionHandler(BookingOwnershipException.class)
+    public ResponseEntity<ErrorResponse> handle(BookingOwnershipException e){
+        ErrorResponse error = new ErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException e) {

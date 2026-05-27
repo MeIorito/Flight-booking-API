@@ -1,11 +1,9 @@
 package com.melle.flightbooking.service;
 
-import com.melle.flightbooking.dto.booking.BookingSummaryDto;
-import com.melle.flightbooking.dto.booking.RegisterBookingDto;
-import com.melle.flightbooking.dto.booking.UpdateBookingFlightDto;
-import com.melle.flightbooking.dto.booking.UpdateBookingUserDto;
+import com.melle.flightbooking.dto.booking.*;
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
+import com.melle.flightbooking.exception.BookingOwnershipException;
 import com.melle.flightbooking.exception.FlightNotFoundException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.interfaces.BookingService;
@@ -20,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -92,6 +91,49 @@ public class BookingServiceImp implements BookingService {
         Booking savedBooking = bookingRepository.save(booking);
 
         return createBookingSummaryDto(savedBooking);
+    }
+
+    @Override
+    public boolean deleteBooking(Integer userId, DeleteBookingDto request) {
+        Integer bookingId = request.getBookingId();
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new FlightNotFoundException("Booking with id: " + bookingId + " does not exist"));
+
+        if(!Objects.equals(userId, booking.getUser().getId())) {
+            throw new BookingOwnershipException("You are not allowed to delete this booking");
+        }
+
+        bookingRepository.delete(booking);
+        return true;
+    }
+
+    @Override
+    public boolean deleteBookingAdmin(Integer bookingId) {
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new FlightNotFoundException("Booking with id: " + bookingId + " does not exist"));
+
+        bookingRepository.delete(booking);
+        return true;
+    }
+
+    @Override
+    public BookingSummaryDto getBookingById(Integer userId, Integer bookingId) {
+
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new FlightNotFoundException("Booking with id: " + bookingId + " does not exist"));
+
+        if(!Objects.equals(userId, booking.getUser().getId())) {
+            throw new BookingOwnershipException("You are not allowed to delete this booking");
+        }
+
+        return createBookingSummaryDto(booking);
+    }
+
+    @Override
+    public Iterable<BookingSummaryDto> getAllBookings() {
+        return bookingRepository.findBy(BookingSummaryDto.class);
     }
 
     /*
