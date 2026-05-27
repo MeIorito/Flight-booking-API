@@ -133,7 +133,12 @@ public class BookingServiceImp implements BookingService {
 
     @Override
     public Iterable<BookingSummaryDto> getAllBookings() {
-        return bookingRepository.findBy(BookingSummaryDto.class);
+        return StreamSupport.stream(
+                        bookingRepository.findAll().spliterator(),
+                        false
+                )
+                .map(this::createBookingSummaryDto)
+                .toList();
     }
 
     /*

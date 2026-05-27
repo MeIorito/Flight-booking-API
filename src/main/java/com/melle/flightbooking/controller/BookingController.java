@@ -69,15 +69,6 @@ public class BookingController {
         return bookingService.getAllBookings();
     }
 
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @GetMapping()
-//    public BookingSummaryDto getAllBookings(){}
-//
-//    @PreAuthorize("hasRole('USER')")
-//    @GetMapping("/{id}")
-//    public BookingSummaryDto getBookingById(){}
-
     /*
     HELPER FUNCTIONS
      */
