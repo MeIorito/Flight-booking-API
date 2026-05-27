@@ -1,0 +1,88 @@
+package com.melle.flightbooking.service;
+
+import com.melle.flightbooking.dto.booking.BookingSummaryDto;
+import com.melle.flightbooking.dto.booking.RegisterBookingDto;
+import com.melle.flightbooking.dto.flight.FlightSummaryDto;
+import com.melle.flightbooking.dto.flight.RegisterFlightDto;
+import com.melle.flightbooking.exception.FlightNotFoundException;
+import com.melle.flightbooking.exception.IdDoesNotExistException;
+import com.melle.flightbooking.interfaces.BookingService;
+import com.melle.flightbooking.interfaces.FlightService;
+import com.melle.flightbooking.model.Booking;
+import com.melle.flightbooking.model.Flight;
+import com.melle.flightbooking.model.User;
+import com.melle.flightbooking.repository.BookingRepository;
+import com.melle.flightbooking.repository.FlightRepository;
+import com.melle.flightbooking.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.stream.StreamSupport;
+
+@Service
+public class BookingServiceImp implements BookingService {
+    private final BookingRepository bookingRepository;
+    private final UserRepository userRepository;
+    private final FlightRepository flightRepository;
+
+    @Autowired
+    public BookingServiceImp(
+            BookingRepository bookingRepository,
+            UserRepository userRepository,
+            FlightRepository flightRepository
+    ) {
+        this.bookingRepository = bookingRepository;
+        this.userRepository = userRepository;
+        this.flightRepository = flightRepository;
+    }
+
+    @Override
+    public BookingSummaryDto createBooking(Integer userId, RegisterBookingDto request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IdDoesNotExistException("User with id: " + userId + " does not exist"));
+
+        Flight flight = flightRepository.findById(request.getFlightId())
+                .orElseThrow(() -> new FlightNotFoundException("Flight with id: " + request.getFlightId() + " does not exist"));
+
+        Booking booking = new Booking();
+
+        booking.setUser(user);
+        booking.setFlight(flight);
+        booking.setBookedAt(LocalDateTime.now());
+
+        Booking savedBooking = bookingRepository.save(booking);
+
+        return createBookingSummaryDto(savedBooking);
+    }
+
+    @Override
+    public BookingSummaryDto updateBookingUser(Integer bookingId, Integer userId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new FlightNotFoundException("Booking with id: " + bookingId + " does not exist"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IdDoesNotExistException("User with id: " + userId + " does not exist"));
+
+        booking.setUser(user);
+        Booking savedBooking = bookingRepository.save(booking);
+
+        return createBookingSummaryDto(savedBooking);
+    }
+
+    /*
+    HELPER FUNCTIONS
+     */
+
+    private BookingSummaryDto createBookingSummaryDto (Booking booking) {
+        return new BookingSummaryDto(
+                booking.getId(),
+                booking.getUser().getId(),
+                booking.getUser().getUsername(),
+                booking.getFlight().getId(),
+                booking.getFlight().getOrigin(),
+                booking.getFlight().getDestination(),
+                booking.getBookedAt()
+        );
+    }
+}
