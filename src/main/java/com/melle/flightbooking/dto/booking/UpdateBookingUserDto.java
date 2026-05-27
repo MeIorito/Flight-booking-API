@@ -4,7 +4,7 @@ public class UpdateBookingUserDto {
     private Integer bookingId;
     private Integer userId;
 
-    public Integer setBookingId() {
+    public Integer getBookingId() {
         return bookingId;
     }
 

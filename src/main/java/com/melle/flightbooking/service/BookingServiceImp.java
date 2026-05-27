@@ -2,6 +2,7 @@ package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.dto.booking.BookingSummaryDto;
 import com.melle.flightbooking.dto.booking.RegisterBookingDto;
+import com.melle.flightbooking.dto.booking.UpdateBookingUserDto;
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
 import com.melle.flightbooking.exception.FlightNotFoundException;
@@ -57,7 +58,10 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public BookingSummaryDto updateBookingUser(Integer bookingId, Integer userId) {
+    public BookingSummaryDto updateBookingUser(UpdateBookingUserDto request) {
+        Integer bookingId = request.getBookingId();
+        Integer userId = request.getUserId();
+
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new FlightNotFoundException("Booking with id: " + bookingId + " does not exist"));
 

@@ -37,7 +37,7 @@ public class BookingController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/user")
     public BookingSummaryDto updateBookingUser(@RequestBody UpdateBookingUserDto request){
-
+        return bookingService.updateBookingUser(request);
     }
 //
 //    @PreAuthorize("hasRole('USER')")
