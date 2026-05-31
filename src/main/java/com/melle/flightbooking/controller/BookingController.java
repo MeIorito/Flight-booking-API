@@ -3,6 +3,7 @@ package com.melle.flightbooking.controller;
 import com.melle.flightbooking.dto.CustomUserPrinciple;
 import com.melle.flightbooking.dto.booking.*;
 import com.melle.flightbooking.service.BookingServiceImp;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,7 @@ public class BookingController {
 
     @PreAuthorize("hasRole('USER')")
     @PostMapping()
-    public BookingSummaryDto createBooking(@RequestBody RegisterBookingDto request) {
+    public BookingSummaryDto createBooking(@Valid @RequestBody RegisterBookingDto request) {
         CustomUserPrinciple user = getUserPrinciple();
 
         return bookingService.createBooking(user.getId(), request);
@@ -31,19 +32,19 @@ public class BookingController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/user")
-    public BookingSummaryDto updateBookingUser(@RequestBody UpdateBookingUserDto request) {
+    public BookingSummaryDto updateBookingUser(@Valid @RequestBody UpdateBookingUserDto request) {
         return bookingService.updateBookingUser(request);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/flight")
-    public BookingSummaryDto updateBookingFlight(@RequestBody UpdateBookingFlightDto request){
+    public BookingSummaryDto updateBookingFlight(@Valid @RequestBody UpdateBookingFlightDto request){
         return bookingService.updateBookingFlight(request);
     }
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping()
-    public boolean deleteBooking(@RequestBody DeleteBookingDto request) {
+    public boolean deleteBooking(@Valid @RequestBody DeleteBookingDto request) {
         CustomUserPrinciple user = getUserPrinciple();
 
         return bookingService.deleteBooking(user.getId(), request);
@@ -51,13 +52,13 @@ public class BookingController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{bookingId}")
-    public boolean deleteBookingAdmin(@PathVariable Integer bookingId) {
+    public boolean deleteBookingAdmin(@Valid @PathVariable Integer bookingId) {
         return bookingService.deleteBookingAdmin(bookingId);
     }
 
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/{bookingId}")
-    public BookingSummaryDto getBookingById(@PathVariable Integer bookingId) {
+    public BookingSummaryDto getBookingById(@Valid @PathVariable Integer bookingId) {
         CustomUserPrinciple user = getUserPrinciple();
 
         return bookingService.getBookingById(user.getId(), bookingId);

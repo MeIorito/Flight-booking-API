@@ -1,8 +1,5 @@
 package com.melle.flightbooking.dto.booking;
 
-import com.melle.flightbooking.dto.flight.FlightSummaryDto;
-import com.melle.flightbooking.dto.user.UserSummaryDto;
-
 import java.time.LocalDateTime;
 
 public class BookingSummaryDto {
