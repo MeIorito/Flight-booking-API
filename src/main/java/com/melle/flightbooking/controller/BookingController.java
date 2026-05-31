@@ -6,6 +6,7 @@ import com.melle.flightbooking.interfaces.BookingService;
 import com.melle.flightbooking.service.BookingServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -45,16 +46,17 @@ public class BookingController {
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping()
-    public boolean deleteBooking(@Valid @RequestBody DeleteBookingDto request) {
+    public ResponseEntity<Void> deleteBooking(@Valid @RequestBody DeleteBookingDto request) {
         CustomUserPrinciple user = getUserPrinciple();
-
-        return bookingService.deleteBooking(user.getId(), request);
+        bookingService.deleteBooking(user.getId(), request);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{bookingId}")
-    public boolean deleteBookingAdmin(@Valid @PathVariable Integer bookingId) {
-        return bookingService.deleteBookingAdmin(bookingId);
+    public ResponseEntity<Void> deleteBookingAdmin(@Valid @PathVariable Integer bookingId) {
+        bookingService.deleteBookingAdmin(bookingId);
+        return ResponseEntity.noContent().build();
     }
 
     @PreAuthorize("hasRole('USER')")

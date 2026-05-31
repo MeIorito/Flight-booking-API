@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -91,15 +92,16 @@ public class FlightController {
     // Should not return Boolean
     @Operation(summary = "Delete flight by id")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Flight successfully deleted"),
+            @ApiResponse(responseCode = "204", description = "Flight successfully deleted, no response body"),
             @ApiResponse(responseCode = "400", description = "Invalid input"),
             @ApiResponse(responseCode = "401", description = "Admin role required"),
             @ApiResponse(responseCode = "404", description = "Invalid flight id")
     })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public boolean deleteFlight(@PathVariable int id){
-        return flightService.deleteFlightById(id);
+    public ResponseEntity<Void> deleteFlight(@PathVariable int id){
+        flightService.deleteFlightById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "Get all flights")

@@ -12,6 +12,7 @@ import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.service.UserServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -78,7 +79,10 @@ public class UserController {
     // Should not return Boolean
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public Boolean deleteUser(@PathVariable Integer id){ return this.userService.deleteUserById(id); }
+    public ResponseEntity<Void> deleteUser(@PathVariable Integer id){
+        userService.deleteUserById(id);
+        return ResponseEntity.noContent().build();
+    }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
