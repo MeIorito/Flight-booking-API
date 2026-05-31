@@ -8,8 +8,8 @@ public interface BookingService {
     BookingSummaryDto createBooking(Integer id, RegisterBookingDto request);
     BookingSummaryDto updateBookingUser(UpdateBookingUserDto request);
     BookingSummaryDto updateBookingFlight(UpdateBookingFlightDto request);
-    boolean deleteBooking(Integer userId, DeleteBookingDto request);
-    boolean deleteBookingAdmin(Integer bookingId);
+    void deleteBooking(Integer userId, DeleteBookingDto request);
+    void deleteBookingAdmin(Integer bookingId);
     BookingSummaryDto getBookingById(Integer userId, Integer bookingId);
     Iterable<BookingSummaryDto> getAllBookings();
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface UserService {
     UserSummaryDto register(RegisterRequestDto user);
-    Boolean deleteUserById(Integer id);
+    void deleteUserById(Integer id);
     LoginResponseDto login(String email, String password);
     Optional<User> findByEmail(String email);
     Iterable<UserSummaryDto> getAllUsers();

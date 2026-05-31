@@ -94,7 +94,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public boolean deleteBooking(Integer userId, DeleteBookingDto request) {
+    public void deleteBooking(Integer userId, DeleteBookingDto request) {
         Integer bookingId = request.getBookingId();
 
         Booking booking = bookingRepository.findById(bookingId)
@@ -105,17 +105,15 @@ public class BookingServiceImp implements BookingService {
         }
 
         bookingRepository.delete(booking);
-        return true;
     }
 
     @Override
-    public boolean deleteBookingAdmin(Integer bookingId) {
+    public void deleteBookingAdmin(Integer bookingId) {
 
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new FlightNotFoundException("Booking with id: " + bookingId + " does not exist"));
 
         bookingRepository.delete(booking);
-        return true;
     }
 
     @Override

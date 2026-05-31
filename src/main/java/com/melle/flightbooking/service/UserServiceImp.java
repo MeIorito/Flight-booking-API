@@ -94,11 +94,10 @@ public class UserServiceImp implements UserService {
         return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
     }
 
-    public Boolean deleteUserById(Integer id){
+    public void deleteUserById(Integer id){
         idIsPresent(id);
 
         userRepository.deleteById(id);
-        return true;
     }
 
     public LoginResponseDto login(String email, String password){

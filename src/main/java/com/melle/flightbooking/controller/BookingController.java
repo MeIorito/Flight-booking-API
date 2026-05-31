@@ -3,7 +3,6 @@ package com.melle.flightbooking.controller;
 import com.melle.flightbooking.dto.CustomUserPrinciple;
 import com.melle.flightbooking.dto.booking.*;
 import com.melle.flightbooking.interfaces.BookingService;
-import com.melle.flightbooking.service.BookingServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

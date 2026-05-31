@@ -82,10 +82,9 @@ public class FlightServiceImp implements FlightService {
     }
 
     @Override
-    public boolean deleteFlightById(Integer id) {
+    public void deleteFlightById(Integer id) {
         idIsPresent(id);
         flightRepository.deleteById(id);
-        return true;
     }
 
     @Override

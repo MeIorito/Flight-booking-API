@@ -10,7 +10,7 @@ public interface FlightService {
     FlightSummaryDto updateDestinationById(Integer id, String destination);
     FlightSummaryDto updateDateById(Integer id, String date);
     FlightSummaryDto updateSeatsById(Integer id, Integer seats);
-    boolean deleteFlightById(Integer id);
+    void deleteFlightById(Integer id);
     FlightSummaryDto getFlightById(Integer id);
     Iterable<FlightSummaryDto> getAllFlights();
 }
