@@ -126,4 +126,15 @@ public class FlightController {
     public FlightSummaryDto getFlightById(@PathVariable int id){
         return flightService.getFlightById(id);
     }
+
+    @Operation(summary = "Getting all flights based on origin, destination, date and seats filters")
+    @GetMapping("/search")
+    public String getFlightsByFilters(
+            @RequestParam (required = false) String origin,
+            @RequestParam (required = false) String destination,
+            @RequestParam (required = false) String date,
+            @RequestParam (required = false) Integer seats
+    ) {
+        return origin + destination + date + seats;
+    }
 }
