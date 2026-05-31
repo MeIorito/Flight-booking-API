@@ -32,7 +32,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // Laat voor nu login/register endpoint altijd door
         if (request.getRequestURI().equals("/api/v1/auth/register") ||
-                (request.getRequestURI().equals("/api/v1/auth/login") && request.getMethod().equals("POST"))) {
+                (request.getRequestURI().equals("/api/v1/auth/login") && request.getMethod().equals("POST")) ||
+                request.getRequestURI().startsWith("/swagger-ui") ||      // (1)
+                request.getRequestURI().startsWith("/v3/api-docs")) {     // (2)
             filterChain.doFilter(request, response);
             return;
         }

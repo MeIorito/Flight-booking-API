@@ -8,6 +8,7 @@ import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.dto.user.UpdateEmailDto;
 import com.melle.flightbooking.dto.user.UpdatePasswordDto;
 import com.melle.flightbooking.dto.user.UpdateUsernameDto;
+import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.service.UserServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/users")
 public class UserController {
 
-    private final UserServiceImp userService;
+    private final UserService userService;
 
     @Autowired
-    public UserController(UserServiceImp userService){ this.userService = userService; }
+    public UserController(UserService userService){ this.userService = userService; }
 
     /*
     USER AND ABOVE ONLY ENDPOINTS

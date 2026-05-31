@@ -2,6 +2,7 @@ package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.CustomUserPrinciple;
 import com.melle.flightbooking.dto.booking.*;
+import com.melle.flightbooking.interfaces.BookingService;
 import com.melle.flightbooking.service.BookingServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.*;
 public class BookingController {
 
     // Booking service
-    private final BookingServiceImp bookingService;
+    private final BookingService bookingService;
 
 
     @Autowired
-    public BookingController(BookingServiceImp bookingService) {
+    public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 

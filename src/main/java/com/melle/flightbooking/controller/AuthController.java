@@ -4,6 +4,7 @@ import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
+import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.service.UserServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
-    private final UserServiceImp userService;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(UserServiceImp userService){ this.userService = userService; }
+    public AuthController(UserService userService){ this.userService = userService; }
 
     @PostMapping("/register")
     public UserSummaryDto register(@Valid @RequestBody RegisterRequestDto request) {
