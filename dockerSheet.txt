@@ -1,0 +1,39 @@
+🐳 Docker Basics
+Versie checken
+docker --version
+Systeem info
+docker info
+📦 Images
+Image builden (Dockerfile → image)
+docker build -t flightbooking .
+Images bekijken
+docker images
+Image verwijderen
+docker rmi <image_id>
+🚀 Containers
+Container starten
+docker run -p 8080:8080 flightbooking
+Container in background (detached mode)
+docker run -d -p 8080:8080 flightbooking
+Alle running containers
+docker ps
+Alle containers (ook stopped)
+docker ps -a
+Container stoppen
+docker stop <container_id>
+Container verwijderen
+docker rm <container_id>
+🧠 Debug / logs
+Logs bekijken
+docker logs <container_id>
+Live logs volgen
+docker logs -f <container_id>
+🧼 Cleanup (handig)
+Stop alle containers
+docker stop $(docker ps -q)
+Verwijder alle stopped containers
+docker container prune
+Verwijder alle unused images
+docker image prune
+Alles clean (heavy)
+docker system prune -a
