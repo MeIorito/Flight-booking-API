@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -20,8 +21,8 @@ public class JwtUtil {
     // "exp": 1710001800
 
     // Remove from here into env file
-    public static final String SECRET = "1827364536728919203947462739405375647626253444624354635264";
-
+    @Value("${jwt.secret}")  // (1)
+    private String secret;
 
     public String createToken(Map<String, Object> claims, String email){
         return Jwts.builder()
@@ -35,7 +36,7 @@ public class JwtUtil {
 
     // Helper for signing
     private Key getSignKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
     public Claims extractClaims(String jwtToken){
