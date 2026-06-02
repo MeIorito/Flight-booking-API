@@ -129,12 +129,12 @@ public class FlightController {
 
     @Operation(summary = "Getting all flights based on origin, destination, date and seats filters")
     @GetMapping("/search")
-    public String getFlightsByFilters(
+    public Iterable<FlightSummaryDto> getFlightsByFilters(
             @RequestParam (required = false) String origin,
             @RequestParam (required = false) String destination,
             @RequestParam (required = false) String date,
             @RequestParam (required = false) Integer seats
     ) {
-        return origin + destination + date + seats;
+        return flightService.getFlightsByFilter(origin, destination, date, seats);
     }
 }

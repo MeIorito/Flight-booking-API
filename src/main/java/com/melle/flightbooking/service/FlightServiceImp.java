@@ -2,16 +2,16 @@ package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
-import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.exception.FlightNotFoundException;
-import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.model.Flight;
 import com.melle.flightbooking.interfaces.FlightService;
-import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.FlightRepository;
+import com.melle.flightbooking.specifications.FlightSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.HTMLDocument;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -104,6 +104,33 @@ public class FlightServiceImp implements FlightService {
                 )
                 .map(this::createFlightSummaryDto)
                 .toList();
+    }
+
+    public Iterable<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats) {
+
+        Specification<Flight> spec = Specification.where(null);
+
+        if (origin != null && !origin.isBlank()) {
+            spec = spec.and(FlightSpecifications.hasOrigin(origin));
+        }
+
+        if (destination != null && !destination.isBlank()) {
+            spec = spec.and(FlightSpecifications.hasDestination(destination));
+        }
+
+        if (date != null && !date.isBlank()) {
+            spec = spec.and(FlightSpecifications.hasDate(date));
+        }
+
+        if (seats != null) {
+            spec = spec.and(FlightSpecifications.hasSeats(seats));
+        }
+
+        Iterable<Flight> filteredFlights = flightRepository.findAll(spec);
+
+        return StreamSupport.stream(filteredFlights.spliterator(), false)
+                        .map(this::createFlightSummaryDto)
+                        .toList();
     }
 
     /*
