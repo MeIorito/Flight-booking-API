@@ -17,6 +17,9 @@ public class BookingController {
     // Booking service
     private final BookingService bookingService;
 
+    /*
+    USER ROLE ENDPOINTS
+     */
 
     @Autowired
     public BookingController(BookingService bookingService) {
@@ -31,6 +34,34 @@ public class BookingController {
         return bookingService.createBooking(user.getId(), request);
     }
 
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/me")
+    public Iterable<BookingSummaryDto> getUserBookings() {
+        CustomUserPrinciple user = getUserPrinciple();
+
+        return bookingService.getBookingsByUserId(user.getId());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/{bookingId}")
+    public BookingSummaryDto getBookingById(@Valid @PathVariable Integer bookingId) {
+        CustomUserPrinciple user = getUserPrinciple();
+
+        return bookingService.getBookingById(user.getId(), bookingId);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping()
+    public ResponseEntity<Void> deleteBooking(@Valid @RequestBody DeleteBookingDto request) {
+        CustomUserPrinciple user = getUserPrinciple();
+        bookingService.deleteBooking(user.getId(), request);
+        return ResponseEntity.noContent().build();
+    }
+
+    /*
+    ADMIN ROLE ENDPOINTS
+     */
+
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/user")
     public BookingSummaryDto updateBookingUser(@Valid @RequestBody UpdateBookingUserDto request) {
@@ -43,27 +74,11 @@ public class BookingController {
         return bookingService.updateBookingFlight(request);
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @DeleteMapping()
-    public ResponseEntity<Void> deleteBooking(@Valid @RequestBody DeleteBookingDto request) {
-        CustomUserPrinciple user = getUserPrinciple();
-        bookingService.deleteBooking(user.getId(), request);
-        return ResponseEntity.noContent().build();
-    }
-
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{bookingId}")
     public ResponseEntity<Void> deleteBookingAdmin(@Valid @PathVariable Integer bookingId) {
         bookingService.deleteBookingAdmin(bookingId);
         return ResponseEntity.noContent().build();
-    }
-
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/{bookingId}")
-    public BookingSummaryDto getBookingById(@Valid @PathVariable Integer bookingId) {
-        CustomUserPrinciple user = getUserPrinciple();
-
-        return bookingService.getBookingById(user.getId(), bookingId);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -12,4 +12,5 @@ public interface BookingService {
     void deleteBookingAdmin(Integer bookingId);
     BookingSummaryDto getBookingById(Integer userId, Integer bookingId);
     Iterable<BookingSummaryDto> getAllBookings();
+    Iterable<BookingSummaryDto> getBookingsByUserId(Integer id);
 }
