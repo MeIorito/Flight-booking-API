@@ -12,7 +12,6 @@ import com.melle.flightbooking.repository.BookingRepository;
 import com.melle.flightbooking.repository.FlightRepository;
 import com.melle.flightbooking.repository.UserRepository;
 import com.melle.flightbooking.specifications.BookingSpecifications;
-import com.melle.flightbooking.specifications.FlightSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
 
-import static javax.management.Query.and;
 
 @Service
 public class BookingServiceImp implements BookingService {
