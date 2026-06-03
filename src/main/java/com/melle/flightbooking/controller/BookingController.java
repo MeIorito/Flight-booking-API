@@ -82,6 +82,12 @@ public class BookingController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{userId}")
+    public Iterable<BookingSummaryDto> getBookingsByUserId(@PathVariable Integer userId) {
+        return bookingService.getBookingsByUserId(userId);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
     public Iterable<BookingSummaryDto> getAllBookings() {
         return bookingService.getAllBookings();
