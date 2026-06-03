@@ -71,8 +71,6 @@ DB_PASSWORD=
 JWT_SECRET=
 ```
 
-> ⚠️ Never commit your `.env` file — it is already in `.gitignore`.
-
 ### Run with Docker
 
 This is the recommended way to run the application. It starts both the database and the API in containers.
