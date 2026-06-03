@@ -1,13 +1,10 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.dto.booking.*;
-import com.melle.flightbooking.dto.flight.FlightSummaryDto;
-import com.melle.flightbooking.dto.flight.RegisterFlightDto;
 import com.melle.flightbooking.exception.BookingOwnershipException;
 import com.melle.flightbooking.exception.FlightNotFoundException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.interfaces.BookingService;
-import com.melle.flightbooking.interfaces.FlightService;
 import com.melle.flightbooking.model.Booking;
 import com.melle.flightbooking.model.Flight;
 import com.melle.flightbooking.model.User;

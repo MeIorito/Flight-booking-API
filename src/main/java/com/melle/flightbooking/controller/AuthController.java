@@ -5,7 +5,6 @@ import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.interfaces.UserService;
-import com.melle.flightbooking.service.UserServiceImp;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
