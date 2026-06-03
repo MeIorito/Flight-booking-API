@@ -9,9 +9,15 @@ import com.melle.flightbooking.dto.user.UpdateEmailDto;
 import com.melle.flightbooking.dto.user.UpdatePasswordDto;
 import com.melle.flightbooking.dto.user.UpdateUsernameDto;
 import com.melle.flightbooking.interfaces.UserService;
+import com.melle.flightbooking.model.Flight;
+import com.melle.flightbooking.model.RoleEnum;
+import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.service.UserServiceImp;
+import com.melle.flightbooking.specifications.FlightSpecifications;
+import com.melle.flightbooking.specifications.UserSpecifications;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -87,6 +93,16 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public Iterable<UserSummaryDto> getAllUsers(){ return this.userService.getAllUsers();}
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/search")
+    public Iterable<UserSummaryDto> getUsersByFilters(
+            @RequestParam (required = false) String username,
+            @RequestParam (required = false) String email,
+            @RequestParam (required = false) RoleEnum role
+    ) {
+        return userService.getUsersByFilters(username, email, role);
+    }
 
     /*
     HELPER FUNCTIONS
