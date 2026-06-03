@@ -9,13 +9,16 @@ import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.RoleEnum;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
+import com.melle.flightbooking.specifications.UserSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -46,7 +49,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
         
-        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+        return createUserSummaryDto(savedUser);
     }
 
     public UserSummaryDto updateUsernameById(Integer id, String username) {
@@ -57,7 +60,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+        return createUserSummaryDto(savedUser);
     }
 
     public UserSummaryDto updateEmailById(Integer id, String email) {
@@ -68,7 +71,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+        return createUserSummaryDto(savedUser);
     }
 
     public UserSummaryDto updatePasswordById(Integer id, String password) {
@@ -80,7 +83,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+        return createUserSummaryDto(savedUser);
     }
 
     public UserSummaryDto updateRoleById(Integer id, RoleEnum role) {
@@ -91,7 +94,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
 
-        return new UserSummaryDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail(), savedUser.getRole());
+        return createUserSummaryDto(savedUser);
     }
 
     public void deleteUserById(Integer id){
@@ -118,7 +121,7 @@ public class UserServiceImp implements UserService {
         claims.put("id", user.getId());
         String jwtToken = jwtUtil.createToken(claims, email);
 
-        return new LoginResponseDto(new UserSummaryDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole()), jwtToken);
+        return new LoginResponseDto(createUserSummaryDto(user), jwtToken);
     }
 
     public Optional<User> findByEmail(String email){
@@ -133,6 +136,37 @@ public class UserServiceImp implements UserService {
 
     public Iterable<UserSummaryDto> getAllUsers(){
         return userRepository.findBy(UserSummaryDto.class);
+    }
+
+    public Iterable<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role) {
+
+        Specification<User> spec = Specification.where(null);
+
+        if (username != null && !username.isBlank()) {
+            spec = spec.and(UserSpecifications.hasUsername(username));
+        }
+
+        if (email != null && !email.isBlank()) {
+            spec = spec.and(UserSpecifications.hasEmail(email));
+        }
+
+        if (role != null) {
+            spec = spec.and(UserSpecifications.hasRole(role));
+        }
+
+        Iterable<User> filteredUsers = userRepository.findAll(spec);
+
+        return StreamSupport.stream(filteredUsers.spliterator(), false)
+                .map(this::createUserSummaryDto)
+                .toList();
+    }
+
+    /*
+    HELPER FUNCTIONS
+     */
+
+    private UserSummaryDto createUserSummaryDto(User user) {
+        return new UserSummaryDto(user.getId(), user.getUsername(), user.getEmail(), user.getRole());
     }
 
     private void idIsPresent(Integer id) {

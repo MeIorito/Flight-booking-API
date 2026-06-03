@@ -2,11 +2,9 @@ package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.flight.*;
 import com.melle.flightbooking.interfaces.FlightService;
-import com.melle.flightbooking.service.FlightServiceImp;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -125,5 +123,16 @@ public class FlightController {
     @GetMapping("/{id}")
     public FlightSummaryDto getFlightById(@PathVariable int id){
         return flightService.getFlightById(id);
+    }
+
+    @Operation(summary = "Getting all flights based on origin, destination, date and seats filters")
+    @GetMapping("/search")
+    public Iterable<FlightSummaryDto> getFlightsByFilters(
+            @RequestParam (required = false) String origin,
+            @RequestParam (required = false) String destination,
+            @RequestParam (required = false) String date,
+            @RequestParam (required = false) Integer seats
+    ) {
+        return flightService.getFlightsByFilter(origin, destination, date, seats);
     }
 }

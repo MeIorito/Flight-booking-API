@@ -13,4 +13,5 @@ public interface FlightService {
     void deleteFlightById(Integer id);
     FlightSummaryDto getFlightById(Integer id);
     Iterable<FlightSummaryDto> getAllFlights();
+    Iterable<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats);
 }

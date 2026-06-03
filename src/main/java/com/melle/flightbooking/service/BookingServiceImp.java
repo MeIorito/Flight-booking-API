@@ -1,25 +1,25 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.dto.booking.*;
-import com.melle.flightbooking.dto.flight.FlightSummaryDto;
-import com.melle.flightbooking.dto.flight.RegisterFlightDto;
 import com.melle.flightbooking.exception.BookingOwnershipException;
 import com.melle.flightbooking.exception.FlightNotFoundException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.interfaces.BookingService;
-import com.melle.flightbooking.interfaces.FlightService;
 import com.melle.flightbooking.model.Booking;
 import com.melle.flightbooking.model.Flight;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.BookingRepository;
 import com.melle.flightbooking.repository.FlightRepository;
 import com.melle.flightbooking.repository.UserRepository;
+import com.melle.flightbooking.specifications.BookingSpecifications;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.stream.StreamSupport;
+
 
 @Service
 public class BookingServiceImp implements BookingService {
@@ -73,6 +73,17 @@ public class BookingServiceImp implements BookingService {
         Booking savedBooking = bookingRepository.save(booking);
 
         return createBookingSummaryDto(savedBooking);
+    }
+
+    // Nested db searches, need to look into this
+    @Override
+    public Iterable<BookingSummaryDto> getBookingsByUserId(Integer id) {
+        Specification<Booking> spec = BookingSpecifications.hasUserId(id);
+
+        return bookingRepository.findAll(BookingSpecifications.hasUserId(id))
+                .stream()
+                .map(this::createBookingSummaryDto)
+                .toList();
     }
 
     @Override

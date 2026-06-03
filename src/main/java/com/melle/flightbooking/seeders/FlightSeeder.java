@@ -5,10 +5,15 @@ import com.melle.flightbooking.repository.FlightRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Random;
+
 @Component
 public class FlightSeeder implements CommandLineRunner {
 
     private final FlightRepository flightRepository;
+    private final Random random = new Random();
 
     public FlightSeeder(FlightRepository flightRepository) {
         this.flightRepository = flightRepository;
@@ -21,28 +26,41 @@ public class FlightSeeder implements CommandLineRunner {
             return;
         }
 
-        Flight f1 = new Flight();
-        f1.setOrigin("Amsterdam");
-        f1.setDestination("Barcelona");
-        f1.setDate("2026-06-01");
-        f1.setSeats(180);
+        List<String> cities = List.of(
+                "Amsterdam", "Rotterdam", "Eindhoven", "Paris", "London",
+                "Berlin", "Rome", "Madrid", "Lisbon", "Barcelona",
+                "New York", "Tokyo", "Dubai", "Singapore", "Sydney",
+                "Bangkok", "Istanbul", "Athens", "Copenhagen", "Stockholm"
+        );
 
-        Flight f2 = new Flight();
-        f2.setOrigin("Amsterdam");
-        f2.setDestination("Tokyo");
-        f2.setDate("2026-07-15");
-        f2.setSeats(250);
+        for (int i = 0; i < 100; i++) {
 
-        Flight f3 = new Flight();
-        f3.setOrigin("Rotterdam");
-        f3.setDestination("London");
-        f3.setDate("2026-05-30");
-        f3.setSeats(120);
+            String origin = randomCity(cities);
+            String destination;
 
-        flightRepository.save(f1);
-        flightRepository.save(f2);
-        flightRepository.save(f3);
+            // ensure origin != destination
+            do {
+                destination = randomCity(cities);
+            } while (destination.equals(origin));
 
-        System.out.println("Flights seeded!");
+            int seats = random.nextInt(50, 400);
+
+            LocalDate date = LocalDate.now()
+                    .plusDays(random.nextInt(1, 365));
+
+            Flight flight = new Flight();
+            flight.setOrigin(origin);
+            flight.setDestination(destination);
+            flight.setSeats(seats);
+            flight.setDate(date.toString());
+
+            flightRepository.save(flight);
+        }
+
+        System.out.println("100 Flights seeded!");
+    }
+
+    private String randomCity(List<String> cities) {
+        return cities.get(random.nextInt(cities.size()));
     }
 }

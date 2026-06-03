@@ -18,4 +18,5 @@ public interface UserService {
     UserSummaryDto updateEmailById(Integer id, String email);
     UserSummaryDto updatePasswordById(Integer id, String password);
     UserSummaryDto updateRoleById(Integer id, RoleEnum role);
+    Iterable<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role);
 }
