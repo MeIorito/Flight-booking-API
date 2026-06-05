@@ -10,6 +10,9 @@ import com.melle.flightbooking.dto.user.UpdatePasswordDto;
 import com.melle.flightbooking.dto.user.UpdateUsernameDto;
 import com.melle.flightbooking.interfaces.UserService;
 import com.melle.flightbooking.model.RoleEnum;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +33,13 @@ public class UserController {
     USER AND ABOVE ONLY ENDPOINTS
      */
 
+    @Operation(summary = "Updates username of submitting user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Username updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PutMapping("/me/username")
     public UserSummaryDto updateUsername(@Valid @RequestBody UpdateUsernameDto username) {
         CustomUserPrinciple user = getUserPrinciple();
@@ -37,6 +47,13 @@ public class UserController {
         return this.userService.updateUsernameById(user.getId(), username.getUsername());
     }
 
+    @Operation(summary = "Updates email of submitting user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Email updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PutMapping("/me/email")
     public UserSummaryDto updateEmail(@Valid @RequestBody UpdateEmailDto email) {
         CustomUserPrinciple user = getUserPrinciple();
@@ -44,6 +61,13 @@ public class UserController {
         return this.userService.updateEmailById(user.getId(), email.getEmail());
     }
 
+    @Operation(summary = "Updates password of submitting user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PutMapping("/me/password")
     public UserSummaryDto updatePassword(@Valid @RequestBody UpdatePasswordDto password) {
         CustomUserPrinciple user = getUserPrinciple();
@@ -55,6 +79,13 @@ public class UserController {
     ADMIN AND ABOVE ONLY ENDPOINTS
      */
 
+    @Operation(summary = "Updates username of given userId")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Username updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/username")
     public UserSummaryDto updateUsernameAdmin(@Valid @RequestBody UpdateUsernameAdminDto username) {
@@ -62,6 +93,13 @@ public class UserController {
         return this.userService.updateUsernameById(username.getId(), username.getUsername());
     }
 
+    @Operation(summary = "Updates email of given userId")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Email updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/email")
     public UserSummaryDto updateEmailAdmin(@Valid @RequestBody UpdateEmailAdminDto email) {
@@ -69,6 +107,13 @@ public class UserController {
         return this.userService.updateEmailById(email.getId(), email.getEmail());
     }
 
+    @Operation(summary = "Updates password of given userId")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Password updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/admin/password")
     public UserSummaryDto updatePasswordAdmin(@Valid @RequestBody UpdatePasswordAdminDto password) {
@@ -76,7 +121,13 @@ public class UserController {
         return this.userService.updatePasswordById(password.getId(), password.getPassword());
     }
 
-    // Should not return Boolean
+    @Operation(summary = "Deletes user with given userId")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "User successfully deleted, no response"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token"),
+            @ApiResponse(responseCode = "404", description = "User id not found")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer id){
@@ -84,10 +135,21 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Gets all users back in Iterable form")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully gotten all users"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public Iterable<UserSummaryDto> getAllUsers(){ return this.userService.getAllUsers();}
 
+    @Operation(summary = "Gets filtered users back in Iterable form")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Successfully gotten filtered users"),
+            @ApiResponse(responseCode = "400", description = "Invalid input"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized, bad jwt token")
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
     public Iterable<UserSummaryDto> getUsersByFilters(
@@ -102,6 +164,7 @@ public class UserController {
     HELPER FUNCTIONS
      */
 
+    @Operation(summary = "Function that gets user from security context")
     private CustomUserPrinciple getUserPrinciple() {
         return (CustomUserPrinciple) SecurityContextHolder
                 .getContext()
