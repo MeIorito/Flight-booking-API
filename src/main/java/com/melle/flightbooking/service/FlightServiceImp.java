@@ -7,12 +7,15 @@ import com.melle.flightbooking.model.Flight;
 import com.melle.flightbooking.interfaces.FlightService;
 import com.melle.flightbooking.repository.FlightRepository;
 import com.melle.flightbooking.specifications.FlightSpecifications;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.StreamSupport;
 
+@Slf4j
 @Service
 public class FlightServiceImp implements FlightService {
     private final FlightRepository flightRepository;
@@ -24,6 +27,7 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public FlightSummaryDto createFlight(RegisterFlightDto flight) {
+        log.info("Creating flight from {} to {} on {}", flight.getOrigin(), flight.getDestination(), flight.getDate());
         Flight newFlight = new Flight();
 
         newFlight.setOrigin(flight.getOrigin());
@@ -32,80 +36,97 @@ public class FlightServiceImp implements FlightService {
         newFlight.setSeats(flight.getSeats());
 
         Flight savedFlight = flightRepository.save(newFlight);
+        log.info("Flight created successfully with id: {}", savedFlight.getId());
 
         return createFlightSummaryDto(savedFlight);
     }
 
     public FlightSummaryDto updateOriginById(Integer id, String origin) {
+        log.info("Updating origin of flight with id: {} to: {}", id, origin);
         idIsPresent(id);
 
         Flight newFlight = flightRepository.findFlightById(id);
         newFlight.setOrigin(origin);
 
         Flight savedFlight = flightRepository.save(newFlight);
+        log.info("Origin of flight with id: {} successfully updated to: {}", savedFlight.getId(), savedFlight.getOrigin());
 
         return createFlightSummaryDto(savedFlight);
     }
 
     public FlightSummaryDto updateDestinationById(Integer id, String destination) {
+        log.info("Updating destination of flight with id: {} to: {}", id, destination);
         idIsPresent(id);
 
         Flight newFlight = flightRepository.findFlightById(id);
         newFlight.setDestination(destination);
 
         Flight savedFlight = flightRepository.save(newFlight);
+        log.info("Destination of flight with id: {} successfully updated to: {}", savedFlight.getId(), savedFlight.getDestination());
 
         return createFlightSummaryDto(savedFlight);
     }
 
     public FlightSummaryDto updateDateById(Integer id, String date) {
+        log.info("Updating date of flight with id: {} to: {}", id, date);
         idIsPresent(id);
 
         Flight newFlight = flightRepository.findFlightById(id);
         newFlight.setDate(date);
 
         Flight savedFlight = flightRepository.save(newFlight);
+        log.info("Date of flight with id: {} successfully updated to: {}", savedFlight.getId(), savedFlight.getDate());
 
         return createFlightSummaryDto(savedFlight);
     }
 
     public FlightSummaryDto updateSeatsById(Integer id, Integer seats) {
+        log.info("Updating seats of flight with id: {} to: {}", id, seats);
         idIsPresent(id);
 
         Flight newFlight = flightRepository.findFlightById(id);
         newFlight.setSeats(seats);
 
         Flight savedFlight = flightRepository.save(newFlight);
+        log.info("Seats of flight with id: {} successfully updated to: {}", savedFlight.getId(), savedFlight.getSeats());
 
         return createFlightSummaryDto(savedFlight);
     }
 
     @Override
     public void deleteFlightById(Integer id) {
+        log.info("Deleting flight with id: {}", id);
+
         idIsPresent(id);
+
         flightRepository.deleteById(id);
+        log.info("Flight with id: {} successfully deleted", id);
     }
 
     @Override
     public FlightSummaryDto getFlightById(Integer id) {
+        log.info("Fetching flight with id: {}", id);
+
         Flight newFlight = flightRepository.findById(id)
-                .orElseThrow(() -> new FlightNotFoundException("Flight with id: " + id + " does not exist"));
+                .orElseThrow(() -> {
+                    log.warn("Flight with id: {} not found", id);
+                    return new FlightNotFoundException("Flight with id: " + id + " does not exist");
+                });
 
         return createFlightSummaryDto(newFlight);
     }
 
     @Override
     public Iterable<FlightSummaryDto> getAllFlights() {
+        log.info("Fetching all flights");
 
-        return StreamSupport.stream(
-                        flightRepository.findAll().spliterator(),
-                        false
-                )
+        return flightRepository.findAll().stream()
                 .map(this::createFlightSummaryDto)
                 .toList();
     }
 
     public Iterable<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats) {
+        log.info("Fetching flights with filters - origin: {}, destination: {}, date: {}, seats: {}", origin, destination, date, seats);
 
         Specification<Flight> spec = Specification.where(null);
 
@@ -125,9 +146,10 @@ public class FlightServiceImp implements FlightService {
             spec = spec.and(FlightSpecifications.hasSeats(seats));
         }
 
-        Iterable<Flight> filteredFlights = flightRepository.findAll(spec);
+        List<Flight> filteredFlights = flightRepository.findAll(spec);
+        log.info("Found {} flights matching filters", filteredFlights.size());
 
-        return StreamSupport.stream(filteredFlights.spliterator(), false)
+        return filteredFlights.stream()
                         .map(this::createFlightSummaryDto)
                         .toList();
     }
@@ -148,6 +170,7 @@ public class FlightServiceImp implements FlightService {
         boolean idIsPresent = flightRepository.existsById(id);
 
         if (!idIsPresent){
+            log.warn("Flight with id: {} does not exist", id);
             throw new FlightNotFoundException("Flight with id: " + id + " does not exist");
         }
     }
