@@ -14,13 +14,11 @@ import com.melle.flightbooking.repository.UserRepository;
 import com.melle.flightbooking.specifications.BookingSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -47,13 +45,13 @@ public class BookingServiceImp implements BookingService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("User with id: {} not found", userId);
-                    return new IdDoesNotExistException("User with id: " + userId + " does not exist")
+                    return new IdDoesNotExistException("User with id: " + userId + " does not exist");
                 });
 
         Flight flight = flightRepository.findById(request.getFlightId())
                 .orElseThrow(() -> {
                     log.warn("Flight with id: {} not found", request.getFlightId());
-                    return new FlightNotFoundException("Flight with id: " + request.getFlightId() + " does not exist")
+                    return new FlightNotFoundException("Flight with id: " + request.getFlightId() + " does not exist");
                 });
 
         Booking booking = new Booking();
@@ -78,13 +76,13 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> {
                     log.warn("Booking with id: {} not found", bookingId);
-                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist")
+                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist");
                 });
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("User with id: {} not found", userId);
-                    return new IdDoesNotExistException("User with id: " + userId + " does not exist")
+                    return new IdDoesNotExistException("User with id: " + userId + " does not exist");
                 });
 
         booking.setUser(user);
@@ -117,13 +115,13 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> {
                     log.warn("Booking with id: {} not found", bookingId);
-                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist")
+                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist");
                 });
 
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> {
                     log.warn("Flight with id: {} not found", flightId);
-                    return new FlightNotFoundException("Flight with id: " + flightId + " does not exist")
+                    return new FlightNotFoundException("Flight with id: " + flightId + " does not exist");
                 });
 
         booking.setFlight(flight);
@@ -143,7 +141,7 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> {
                     log.warn("Booking with id: {} not found", bookingId);
-                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist")
+                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist");
                 });
 
         if(!Objects.equals(userId, booking.getUser().getId())) {
@@ -162,7 +160,7 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> {
                     log.warn("Booking with id: {} not found", bookingId);
-                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist")
+                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist");
                 });
 
         bookingRepository.delete(booking);
@@ -176,7 +174,7 @@ public class BookingServiceImp implements BookingService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> {
                     log.warn("Booking with id: {} not found", bookingId);
-                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist")
+                    return new FlightNotFoundException("Booking with id: " + bookingId + " does not exist");
                 });
 
         if(!Objects.equals(userId, booking.getUser().getId())) {
@@ -190,10 +188,7 @@ public class BookingServiceImp implements BookingService {
     @Override
     public Iterable<BookingSummaryDto> getAllBookings() {
         log.info("Fetching all bookings");
-        return StreamSupport.stream(
-                        bookingRepository.findAll().spliterator(),
-                        false
-                )
+        return bookingRepository.findAll().stream()
                 .map(this::createBookingSummaryDto)
                 .toList();
     }

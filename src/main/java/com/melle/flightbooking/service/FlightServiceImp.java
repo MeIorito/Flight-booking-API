@@ -110,7 +110,7 @@ public class FlightServiceImp implements FlightService {
         Flight newFlight = flightRepository.findById(id)
                 .orElseThrow(() -> {
                     log.warn("Flight with id: {} not found", id);
-                    return new FlightNotFoundException("Flight with id: " + id + " does not exist"));
+                    return new FlightNotFoundException("Flight with id: " + id + " does not exist");
                 });
 
         return createFlightSummaryDto(newFlight);
@@ -120,10 +120,7 @@ public class FlightServiceImp implements FlightService {
     public Iterable<FlightSummaryDto> getAllFlights() {
         log.info("Fetching all flights");
 
-        return StreamSupport.stream(
-                        flightRepository.findAll().spliterator(),
-                        false
-                )
+        return flightRepository.findAll().stream()
                 .map(this::createFlightSummaryDto)
                 .toList();
     }
@@ -152,7 +149,7 @@ public class FlightServiceImp implements FlightService {
         List<Flight> filteredFlights = flightRepository.findAll(spec);
         log.info("Found {} flights matching filters", filteredFlights.size());
 
-        return StreamSupport.stream(filteredFlights.spliterator(), false)
+        return filteredFlights.stream()
                         .map(this::createFlightSummaryDto)
                         .toList();
     }
