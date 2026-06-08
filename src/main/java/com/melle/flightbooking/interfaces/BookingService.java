@@ -3,6 +3,8 @@ package com.melle.flightbooking.interfaces;
 import com.melle.flightbooking.dto.booking.*;
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BookingService {
     BookingSummaryDto createBooking(Integer id, RegisterBookingDto request);
@@ -12,5 +14,5 @@ public interface BookingService {
     void deleteBookingAdmin(Integer bookingId);
     BookingSummaryDto getBookingById(Integer userId, Integer bookingId);
     Iterable<BookingSummaryDto> getAllBookings();
-    Iterable<BookingSummaryDto> getBookingsByUserId(Integer id);
+    Page<BookingSummaryDto> getBookingsByUserId(Integer id, Pageable pageable);
 }

@@ -14,6 +14,8 @@ import com.melle.flightbooking.repository.UserRepository;
 import com.melle.flightbooking.specifications.BookingSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -95,16 +97,14 @@ public class BookingServiceImp implements BookingService {
 
     // Nested db searches, need to look into this
     @Override
-    public Iterable<BookingSummaryDto> getBookingsByUserId(Integer id) {
-        log.info("Fetching bookings for user with id: {}", id);
+    public Page<BookingSummaryDto> getBookingsByUserId(Integer id, Pageable pageable) {
+        log.info("Fetching bookings for user with id: {} - page: {}, size: {}", id, pageable.getPageNumber(), pageable.getPageSize());
 
-        List<BookingSummaryDto> response = bookingRepository.findAll(BookingSpecifications.hasUserId(id))
-                .stream()
-                .map(this::createBookingSummaryDto)
-                .toList();
+        Page<BookingSummaryDto> page = bookingRepository.findAll(BookingSpecifications.hasUserId(id), pageable)
+                .map(this::createBookingSummaryDto);
 
-        log.info("Found {} bookings for user with id: {}", response.size(), id);
-        return response;
+        log.info("Found {} bookings for user with id: {}", page.getSize(), id);
+        return page;
     }
 
     @Override

@@ -8,6 +8,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,10 +55,14 @@ public class BookingController {
     })
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/me")
-    public Iterable<BookingSummaryDto> getUserBookings() {
+    public Page<BookingSummaryDto> getUserBookings(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
         CustomUserPrinciple user = getUserPrinciple();
+        Pageable pageable = PageRequest.of(page, size);
 
-        return bookingService.getBookingsByUserId(user.getId());
+        return bookingService.getBookingsByUserId(user.getId(), pageable);
     }
 
     @Operation(summary = "Gets booking with given bookingId")
@@ -144,8 +151,14 @@ public class BookingController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
-    public Iterable<BookingSummaryDto> getBookingsByUserId(@PathVariable Integer userId) {
-        return bookingService.getBookingsByUserId(userId);
+    public Iterable<BookingSummaryDto> getBookingsByUserId(
+            @PathVariable Integer userId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        return bookingService.getBookingsByUserId(userId, pageable);
     }
 
     @Operation(summary = "Gets all bookings")
