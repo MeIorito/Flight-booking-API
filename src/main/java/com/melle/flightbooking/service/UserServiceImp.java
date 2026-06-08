@@ -12,6 +12,8 @@ import com.melle.flightbooking.repository.UserRepository;
 import com.melle.flightbooking.specifications.UserSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -156,12 +158,11 @@ public class UserServiceImp implements UserService {
         return Optional.ofNullable(userRepository.findUserByEmail(email));
     }
 
-    public Iterable<UserSummaryDto> getAllUsers(){
+    public Page<UserSummaryDto> getAllUsers(Pageable pageable){
         log.info("Fetching all users");
-        return userRepository.findBy(UserSummaryDto.class);
+        return userRepository.findBy(UserSummaryDto.class, pageable);
     }
-
-    public Iterable<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role) {
+    public Page<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable) {
         log.info("Fetching users with filters - username: {}, email: {}, role: {}", username, email, role);
 
         Specification<User> spec = Specification.where(null);
@@ -178,12 +179,10 @@ public class UserServiceImp implements UserService {
             spec = spec.and(UserSpecifications.hasRole(role));
         }
 
-        List<User> filteredUsers = userRepository.findAll(spec);
-        log.info("Found {} users matching filters", filteredUsers.size());
+        Page<User> filteredUsers = userRepository.findAll(spec, pageable);
+        log.info("Found {} users matching filters", filteredUsers.getSize());
 
-        return StreamSupport.stream(filteredUsers.spliterator(), false)
-                .map(this::createUserSummaryDto)
-                .toList();
+        return filteredUsers.map(this::createUserSummaryDto);
     }
 
     /*

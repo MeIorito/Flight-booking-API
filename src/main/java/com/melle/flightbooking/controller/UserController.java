@@ -15,6 +15,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -142,7 +145,14 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public Iterable<UserSummaryDto> getAllUsers(){ return this.userService.getAllUsers();}
+    public Page<UserSummaryDto> getAllUsers(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+
+        return this.userService.getAllUsers(pageable);
+    }
 
     @Operation(summary = "Gets filtered users back in Iterable form")
     @ApiResponses({
@@ -155,9 +165,13 @@ public class UserController {
     public Iterable<UserSummaryDto> getUsersByFilters(
             @RequestParam (required = false) String username,
             @RequestParam (required = false) String email,
-            @RequestParam (required = false) RoleEnum role
+            @RequestParam (required = false) RoleEnum role,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
     ) {
-        return userService.getUsersByFilters(username, email, role);
+        Pageable pageable = PageRequest.of(page, size);
+
+        return userService.getUsersByFilters(username, email, role, pageable);
     }
 
     /*
