@@ -186,11 +186,10 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public Iterable<BookingSummaryDto> getAllBookings() {
+    public Page<BookingSummaryDto> getAllBookings(Pageable pageable) {
         log.info("Fetching all bookings");
-        return bookingRepository.findAll().stream()
-                .map(this::createBookingSummaryDto)
-                .toList();
+        return bookingRepository.findAll(pageable)
+                .map(this::createBookingSummaryDto);
     }
 
     /*

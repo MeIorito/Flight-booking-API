@@ -13,6 +13,6 @@ public interface BookingService {
     void deleteBooking(Integer userId, DeleteBookingDto request);
     void deleteBookingAdmin(Integer bookingId);
     BookingSummaryDto getBookingById(Integer userId, Integer bookingId);
-    Iterable<BookingSummaryDto> getAllBookings();
+    Page<BookingSummaryDto> getAllBookings(Pageable pageable);
     Page<BookingSummaryDto> getBookingsByUserId(Integer id, Pageable pageable);
 }

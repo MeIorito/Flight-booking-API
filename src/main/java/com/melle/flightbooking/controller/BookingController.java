@@ -151,7 +151,7 @@ public class BookingController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}")
-    public Iterable<BookingSummaryDto> getBookingsByUserId(
+    public Page<BookingSummaryDto> getBookingsByUserId(
             @PathVariable Integer userId,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
@@ -168,8 +168,12 @@ public class BookingController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
-    public Iterable<BookingSummaryDto> getAllBookings() {
-        return bookingService.getAllBookings();
+    public Page<BookingSummaryDto> getAllBookings(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        return bookingService.getAllBookings(pageable);
     }
 
     /*
