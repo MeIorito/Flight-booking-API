@@ -9,7 +9,10 @@ import com.melle.flightbooking.repository.FlightRepository;
 import com.melle.flightbooking.specifications.FlightSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -117,15 +120,14 @@ public class FlightServiceImp implements FlightService {
     }
 
     @Override
-    public Iterable<FlightSummaryDto> getAllFlights() {
+    public Page<FlightSummaryDto> getAllFlights(Pageable pageable) {
         log.info("Fetching all flights");
 
-        return flightRepository.findAll().stream()
-                .map(this::createFlightSummaryDto)
-                .toList();
+        return flightRepository.findAll(pageable)
+                .map(this::createFlightSummaryDto);
     }
 
-    public Iterable<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats) {
+    public Page<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable) {
         log.info("Fetching flights with filters - origin: {}, destination: {}, date: {}, seats: {}", origin, destination, date, seats);
 
         Specification<Flight> spec = Specification.where(null);
@@ -146,12 +148,11 @@ public class FlightServiceImp implements FlightService {
             spec = spec.and(FlightSpecifications.hasSeats(seats));
         }
 
-        List<Flight> filteredFlights = flightRepository.findAll(spec);
-        log.info("Found {} flights matching filters", filteredFlights.size());
+        Page<Flight> filteredFlights = flightRepository.findAll(spec, pageable);
+        log.info("Found {} flights matching filters", filteredFlights.getSize());
 
-        return filteredFlights.stream()
-                        .map(this::createFlightSummaryDto)
-                        .toList();
+        return filteredFlights
+                        .map(this::createFlightSummaryDto);
     }
 
     /*

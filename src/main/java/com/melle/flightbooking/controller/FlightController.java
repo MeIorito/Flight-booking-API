@@ -7,6 +7,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -108,8 +111,13 @@ public class FlightController {
             @ApiResponse(responseCode = "401", description = "Valid jwt required"),
     })
     @GetMapping()
-    public Iterable<FlightSummaryDto> getAllFlights(){
-        return flightService.getAllFlights();
+    public Page<FlightSummaryDto> getAllFlights(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ){
+        Pageable pageable = PageRequest.of(page, size);
+
+        return flightService.getAllFlights(pageable);
     }
 
 
@@ -131,8 +139,12 @@ public class FlightController {
             @RequestParam (required = false) String origin,
             @RequestParam (required = false) String destination,
             @RequestParam (required = false) String date,
-            @RequestParam (required = false) Integer seats
+            @RequestParam (required = false) Integer seats,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
     ) {
-        return flightService.getFlightsByFilter(origin, destination, date, seats);
+        Pageable pageable = PageRequest.of(page, size);
+
+        return flightService.getFlightsByFilter(origin, destination, date, seats, pageable);
     }
 }
