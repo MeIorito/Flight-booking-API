@@ -162,6 +162,7 @@ public class UserServiceImp implements UserService {
         log.info("Fetching all users");
         return userRepository.findBy(UserSummaryDto.class, pageable);
     }
+
     public Page<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable) {
         log.info("Fetching users with filters - username: {}, email: {}, role: {}", username, email, role);
 
