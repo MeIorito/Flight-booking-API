@@ -162,7 +162,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
-    public Iterable<UserSummaryDto> getUsersByFilters(
+    public Page<UserSummaryDto> getUsersByFilters(
             @RequestParam (required = false) String username,
             @RequestParam (required = false) String email,
             @RequestParam (required = false) RoleEnum role,
