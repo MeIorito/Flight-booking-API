@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -188,7 +189,10 @@ public class BookingServiceImp implements BookingService {
     @Override
     public Page<BookingSummaryDto> getAllBookings(Pageable pageable) {
         log.info("Fetching all bookings");
-        return bookingRepository.findAll(pageable)
+
+        Specification<Booking> spec = Specification.where(null);
+
+        return bookingRepository.findAll(spec, pageable)
                 .map(this::createBookingSummaryDto);
     }
 
