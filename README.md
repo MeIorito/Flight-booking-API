@@ -9,10 +9,10 @@ A RESTful backend API for managing flights, users, and bookings — built with J
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Environment Variables](#environment-variables)
-    - [Run with Docker](#run-with-docker)
-    - [Run Locally](#run-locally)
+  - [Prerequisites](#prerequisites)
+  - [Environment Variables](#environment-variables)
+  - [Run with Docker](#run-with-docker)
+  - [Run Locally](#run-locally)
 - [API Documentation](#api-documentation)
 - [Project Structure](#project-structure)
 - [Authentication](#authentication)
@@ -25,6 +25,8 @@ A RESTful backend API for managing flights, users, and bookings — built with J
 - JWT-based authentication and authorization
 - Role-based access control (USER / ADMIN)
 - Full CRUD for flights, users, and bookings
+- Filtered search endpoints for flights and users
+- Pagination on all list endpoints
 - Input validation with detailed error responses
 - Swagger UI for interactive API exploration
 - Dockerized setup with PostgreSQL
@@ -71,6 +73,8 @@ DB_PASSWORD=
 JWT_SECRET=
 ```
 
+> ⚠️ Never commit your `.env` file — it is already in `.gitignore`.
+
 ### Run with Docker
 
 This is the recommended way to run the application. It starts both the database and the API in containers.
@@ -106,7 +110,7 @@ docker-compose up db -d
 **2. Run the application:**
 
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
 ---
@@ -169,7 +173,7 @@ In Swagger UI, click the **Authorize** button (top right) and paste your token t
 
 | Role | Access |
 |---|---|
-| `USER` | Read flights, manage own bookings |
+| `USER` | Read flights, manage own bookings, update own profile |
 | `ADMIN` | Full access including creating/deleting flights and managing all users |
 
 ---
@@ -187,8 +191,9 @@ In Swagger UI, click the **Authorize** button (top right) and paste your token t
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/api/v1/flights` | Authenticated | Get all flights |
+| GET | `/api/v1/flights?page=0&size=10` | Authenticated | Get all flights (paginated) |
 | GET | `/api/v1/flights/{id}` | Authenticated | Get flight by ID |
+| GET | `/api/v1/flights/search?origin=&destination=&date=&seats=` | Authenticated | Search flights by filters |
 | POST | `/api/v1/flights` | Admin | Create a new flight |
 | PUT | `/api/v1/flights/origin` | Admin | Update flight origin |
 | PUT | `/api/v1/flights/destination` | Admin | Update flight destination |
@@ -200,23 +205,26 @@ In Swagger UI, click the **Authorize** button (top right) and paste your token t
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/api/v1/bookings` | Admin | Get all bookings |
-| GET | `/api/v1/bookings/{id}` | Authenticated | Get booking by ID |
-| POST | `/api/v1/bookings` | Authenticated | Create a booking |
-| PUT | `/api/v1/bookings/flight` | Authenticated | Update booking flight |
-| PUT | `/api/v1/bookings/user` | Admin | Update booking user |
-| DELETE | `/api/v1/bookings/{id}` | Authenticated | Delete a booking |
+| GET | `/api/v1/booking?page=0&size=10` | Admin | Get all bookings (paginated) |
+| GET | `/api/v1/booking/{userId}?page=0&size=10` | Admin | Get bookings by user ID (paginated) |
+| GET | `/api/v1/booking/me?page=0&size=10` | User | Get own bookings (paginated) |
+| GET | `/api/v1/booking/{bookingId}` | User | Get booking by ID |
+| POST | `/api/v1/booking` | User | Create a booking |
+| PUT | `/api/v1/booking/flight` | Admin | Update booking flight |
+| PUT | `/api/v1/booking/user` | Admin | Update booking user |
+| DELETE | `/api/v1/booking` | User | Delete own booking |
+| DELETE | `/api/v1/booking/{bookingId}` | Admin | Delete any booking |
 
 ### Users
 
 | Method | Endpoint | Access | Description |
 |---|---|---|---|
-| GET | `/api/v1/users` | Admin | Get all users |
-| GET | `/api/v1/users/{id}` | Authenticated | Get user by ID |
-| PUT | `/api/v1/users/email` | Authenticated | Update own email |
-| PUT | `/api/v1/users/username` | Authenticated | Update own username |
-| PUT | `/api/v1/users/password` | Authenticated | Update own password |
-| PUT | `/api/v1/users/email/admin` | Admin | Update any user's email |
-| PUT | `/api/v1/users/username/admin` | Admin | Update any user's username |
-| PUT | `/api/v1/users/password/admin` | Admin | Update any user's password |
+| GET | `/api/v1/users?page=0&size=10` | Admin | Get all users (paginated) |
+| GET | `/api/v1/users/search?username=&email=&role=` | Admin | Search users by filters |
+| PUT | `/api/v1/users/me/username` | Authenticated | Update own username |
+| PUT | `/api/v1/users/me/email` | Authenticated | Update own email |
+| PUT | `/api/v1/users/me/password` | Authenticated | Update own password |
+| PUT | `/api/v1/users/admin/username` | Admin | Update any user's username |
+| PUT | `/api/v1/users/admin/email` | Admin | Update any user's email |
+| PUT | `/api/v1/users/admin/password` | Admin | Update any user's password |
 | DELETE | `/api/v1/users/{id}` | Admin | Delete a user |
