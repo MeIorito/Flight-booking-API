@@ -1,6 +1,7 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.config.JwtUtil;
+import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
@@ -121,7 +122,10 @@ public class UserServiceImp implements UserService {
         log.info("User with id: {} successfully deleted", id);
     }
 
-    public LoginResponseDto login(String email, String password){
+    public LoginResponseDto login(LoginRequestDto request){
+        String email = request.getEmail();
+        String password = request.getPassword();
+
         log.info("Logging in user with email: {}", email);
         boolean isEmailPresent = userRepository.existsByEmail(email);
 
