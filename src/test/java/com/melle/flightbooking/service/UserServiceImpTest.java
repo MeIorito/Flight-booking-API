@@ -6,6 +6,8 @@ import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.exception.EmailAlreadyExistsException;
+import com.melle.flightbooking.exception.EmailDoesNotExistException;
+import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.model.RoleEnum;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
@@ -92,5 +94,35 @@ class UserServiceImpTest {
         assertEquals("jwt-token", result.getJwtToken());
         assertEquals("user@test.com", result.getUser().email());
         verify(jwtUtil).createToken(any(), eq("user@test.com"));
+    }
+
+    @Test
+    void login_whenEmailNotInUse_throwsEmailDoesNotExistException() {
+        LoginRequestDto request = new LoginRequestDto("user@test.com", "password123");
+
+        when(userRepository.existsByEmail("user@test.com")).thenReturn(false);
+
+        assertThrows(EmailDoesNotExistException.class,
+                () -> userService.login(request));
+
+        verify(userRepository, never()).findUserByEmail(any());
+    }
+
+    @Test
+    void login_whenPasswordIsIncorrect_throwsInvalidCredentialsException() {
+        LoginRequestDto request = new LoginRequestDto("user@test.com", "wrongpassword");
+
+        User user = new User();
+        user.setEmail("user@test.com");
+        user.setPassword("hashedPassword");
+
+        when(userRepository.existsByEmail("user@test.com")).thenReturn(true);
+        when(userRepository.findUserByEmail("user@test.com")).thenReturn(user);
+        when(passwordEncoder.matches("wrongpassword", "hashedPassword")).thenReturn(false);
+
+        assertThrows(InvalidCredentialsException.class,
+                () -> userService.login(request));
+
+        verify(jwtUtil, never()).createToken(any(), any());
     }
 }
