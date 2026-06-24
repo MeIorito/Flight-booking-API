@@ -164,4 +164,97 @@ class UserServiceImpTest {
 
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    void updateEmailById_whenUserExists_returnsUpdatedUserSummaryDto() {
+        User user = new User();
+        user.setId(1);
+        user.setUsername("test");
+        user.setEmail("old@test.com");
+        user.setRole(RoleEnum.USER);
+
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(userRepository.findUserById(user.getId())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        userService.updateEmailById(1, "new@test.com");
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        assertEquals("new@test.com", captor.getValue().getEmail());
+    }
+
+    @Test
+    void updateEmailById_whenUserDoesNotExist_throwsIdDoesNotExistException() {
+        User user = new User();
+        user.setId(1);
+
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+
+        assertThrows(IdDoesNotExistException.class,
+                () -> userService.updateEmailById(user.getId(), "new@test.com"));
+
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updatePasswordById_whenUserExists_savesEncodedPassword() {
+        User user = new User();
+        user.setId(1);
+        user.setPassword("oldHashedPassword");
+
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(userRepository.findUserById(user.getId())).thenReturn(user);
+        when(passwordEncoder.encode("newPassword123")).thenReturn("newHashedPassword");
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        userService.updatePasswordById(1, "newPassword123");
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        assertEquals("newHashedPassword", captor.getValue().getPassword());
+    }
+
+    @Test
+    void updatePasswordById_whenUserDoesNotExist_throwsIdDoesNotExistException() {
+        User user = new User();
+        user.setId(1);
+
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+
+        assertThrows(IdDoesNotExistException.class,
+                () -> userService.updatePasswordById(user.getId(), "newPassword123"));
+
+        verify(userRepository, never()).save(any());
+    }
+
+    @Test
+    void updateRoleById_whenUserExists_returnsUpdatedUserSummaryDto() {
+        User user = new User();
+        user.setId(1);
+        user.setRole(RoleEnum.USER);
+
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(userRepository.findUserById(user.getId())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        userService.updateRoleById(1, RoleEnum.ADMIN);
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        assertEquals(RoleEnum.ADMIN, captor.getValue().getRole());
+    }
+
+    @Test
+    void updateRoleById_whenUserDoesNotExist_throwsIdDoesNotExistException() {
+        User user = new User();
+        user.setId(1);
+
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+
+        assertThrows(IdDoesNotExistException.class,
+                () -> userService.updateRoleById(user.getId(), RoleEnum.ADMIN));
+
+        verify(userRepository, never()).save(any());
+    }
 }
