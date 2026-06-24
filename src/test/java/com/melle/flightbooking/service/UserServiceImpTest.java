@@ -257,4 +257,52 @@ class UserServiceImpTest {
 
         verify(userRepository, never()).save(any());
     }
+
+    @Test
+    void deleteUserById_whenUserExists_deletesUser() {
+        when(userRepository.existsById(1)).thenReturn(true);
+
+        userService.deleteUserById(1);
+
+        verify(userRepository).deleteById(1);
+    }
+
+    @Test
+    void deleteUserById_whenUserDoesNotExist_throwsIdDoesNotExistException() {
+        User user = new User();
+        user.setId(1);
+
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+        assertThrows(IdDoesNotExistException.class,
+                () -> userService.deleteUserById(user.getId()));
+
+        verify(userRepository, never()).deleteById(any());
+    }
+
+    @Test
+    void findByEmail_whenUserExists_returnsUserSummaryDto() {
+        User user = new User();
+        user.setId(1);
+        user.setUsername("test");
+        user.setEmail("user@test.com");
+        user.setRole(RoleEnum.USER);
+
+        when(userRepository.existsByEmail("user@test.com")).thenReturn(true);
+        when(userRepository.findUserByEmail("user@test.com")).thenReturn(user);
+
+        UserSummaryDto result = userService.findByEmail("user@test.com");
+
+        assertEquals("user@test.com", result.email());
+        assertEquals("test", result.username());
+    }
+
+    @Test
+    void findByEmail_whenUserDoesNotExist_throwsEmailDoesNotExistException() {
+        when(userRepository.existsByEmail("user@test.com")).thenReturn(false);
+
+        assertThrows(EmailDoesNotExistException.class,
+                () -> userService.findByEmail("user@test.com"));
+
+        verify(userRepository, never()).findUserByEmail(any());
+    }
 }

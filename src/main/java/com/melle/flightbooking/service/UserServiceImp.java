@@ -148,16 +148,16 @@ public class UserServiceImp implements UserService {
         return new LoginResponseDto(createUserSummaryDto(user), jwtToken);
     }
 
-    public Optional<User> findByEmail(String email){
+    public UserSummaryDto findByEmail(String email) {
         log.info("Fetching user with email: {}", email);
-        boolean isEmailPresent = userRepository.existsByEmail(email);
 
-        if (!isEmailPresent) {
+        if (!userRepository.existsByEmail(email)) {
             log.warn("User with email: {} does not exist", email);
             throw new EmailDoesNotExistException("Email does not exist");
         }
 
-        return Optional.ofNullable(userRepository.findUserByEmail(email));
+        User user = userRepository.findUserByEmail(email);
+        return createUserSummaryDto(user);
     }
 
     public Page<UserSummaryDto> getAllUsers(Pageable pageable){

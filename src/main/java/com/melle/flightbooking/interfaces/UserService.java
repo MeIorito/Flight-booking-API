@@ -15,7 +15,7 @@ public interface UserService {
     UserSummaryDto register(RegisterRequestDto user);
     void deleteUserById(Integer id);
     LoginResponseDto login(LoginRequestDto request);
-    Optional<User> findByEmail(String email);
+    UserSummaryDto findByEmail(String email);
     UserSummaryDto updateUsernameById(Integer id, String username);
     UserSummaryDto updateEmailById(Integer id, String email);
     UserSummaryDto updatePasswordById(Integer id, String password);
