@@ -7,12 +7,14 @@ import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.exception.EmailAlreadyExistsException;
 import com.melle.flightbooking.exception.EmailDoesNotExistException;
+import com.melle.flightbooking.exception.IdDoesNotExistException;
 import com.melle.flightbooking.exception.InvalidCredentialsException;
 import com.melle.flightbooking.model.RoleEnum;
 import com.melle.flightbooking.model.User;
 import com.melle.flightbooking.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImpTest {
@@ -71,6 +74,7 @@ class UserServiceImpTest {
 
         verify(userRepository, never()).save(any());
     }
+
 
     @Test
     void login_whenCredentialsAreValid_returnsLoginResponseDto() {
@@ -124,5 +128,40 @@ class UserServiceImpTest {
                 () -> userService.login(request));
 
         verify(jwtUtil, never()).createToken(any(), any());
+    }
+
+    @Test
+    void updateUsernameById_whenUserExists_returnsUpdatedUserSummaryDto() {
+        User user = new User();
+        user.setId(1);
+        user.setUsername("oldUsername");
+        user.setEmail("user@test.com");
+        user.setRole(RoleEnum.USER);
+
+        when(userRepository.existsById(user.getId())).thenReturn(true);
+        when(userRepository.findUserById(user.getId())).thenReturn(user);
+        when(userRepository.save(any(User.class))).thenAnswer(i -> i.getArgument(0));
+
+        UserSummaryDto result = userService.updateUsernameById(1, "newUsername");
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(captor.capture());
+        assertEquals("newUsername", captor.getValue().getUsername());
+    }
+
+    @Test
+    void updateUsernameById_whenUserDoesNotExist_returnsIdDoesNotExistException() {
+        User user = new User();
+        user.setId(1);
+        user.setUsername("oldUsername");
+        user.setEmail("user@test.com");
+        user.setRole(RoleEnum.USER);
+
+        when(userRepository.existsById(user.getId())).thenReturn(false);
+
+        assertThrows(IdDoesNotExistException.class,
+                () -> userService.updateUsernameById(user.getId(), user.getUsername()));
+
+        verify(userRepository, never()).save(any());
     }
 }
