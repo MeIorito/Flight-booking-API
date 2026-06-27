@@ -18,7 +18,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -304,5 +310,30 @@ class UserServiceImpTest {
                 () -> userService.findByEmail("user@test.com"));
 
         verify(userRepository, never()).findUserByEmail(any());
+    }
+
+    @Test
+    void getAllUsers_returnsPagedUserSummaryDto() {
+        UserSummaryDto user1 = new UserSummaryDto(1, "user1", "user1@test.com", RoleEnum.USER);
+        UserSummaryDto user2 = new UserSummaryDto(2, "user2", "user2@test.com", RoleEnum.ADMIN);
+
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<UserSummaryDto> page = new PageImpl<>(List.of(user1, user2), pageable, 2);
+
+        when(userRepository.findBy(UserSummaryDto.class, pageable)).thenReturn(page);
+
+        Page<UserSummaryDto> result = userService.getAllUsers(pageable);
+
+        assertEquals(user1, result.getContent().get(0));
+        assertEquals(user2, result.getContent().get(1));
+        assertEquals(2, result.getContent().size());
+    }
+
+    @Test
+    void getUsersByFilters_whenFiltersAreFound_returnsPagedUserSummaryDto() {
+        UserSummaryDto user1 = new UserSummaryDto(1, "user1", "user1@test.com", RoleEnum.USER);
+        UserSummaryDto user2 = new UserSummaryDto(2, "user2", "user2@test.com", RoleEnum.ADMIN);
+
+        Pageable pageable = PageRequest.of(0, 10);
     }
 }
