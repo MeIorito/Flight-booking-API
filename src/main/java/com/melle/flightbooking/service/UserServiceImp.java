@@ -55,7 +55,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
         log.info("User created successfully with id: {}", savedUser.getId());
-        
+
         return createUserSummaryDto(savedUser);
     }
 
