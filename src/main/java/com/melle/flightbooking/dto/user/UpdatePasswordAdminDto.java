@@ -6,7 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class UpdatePasswordAdminDto {
     @NotNull(message = ID_BLANK_MESSAGE)
     private Integer id;
@@ -19,19 +23,9 @@ public class UpdatePasswordAdminDto {
     )
     private String password;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
+    public UpdatePasswordAdminDto(Integer id, String password) {
         this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
         this.password = password;
     }
+
 }

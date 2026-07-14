@@ -1,5 +1,6 @@
 package com.melle.flightbooking.interfaces;
 
+import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
@@ -13,8 +14,8 @@ import java.util.Optional;
 public interface UserService {
     UserSummaryDto register(RegisterRequestDto user);
     void deleteUserById(Integer id);
-    LoginResponseDto login(String email, String password);
-    Optional<User> findByEmail(String email);
+    LoginResponseDto login(LoginRequestDto request);
+    UserSummaryDto findByEmail(String email);
     UserSummaryDto updateUsernameById(Integer id, String username);
     UserSummaryDto updateEmailById(Integer id, String email);
     UserSummaryDto updatePasswordById(Integer id, String password);

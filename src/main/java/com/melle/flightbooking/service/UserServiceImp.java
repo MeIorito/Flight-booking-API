@@ -1,6 +1,7 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.config.JwtUtil;
+import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
@@ -19,10 +20,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
@@ -56,7 +55,7 @@ public class UserServiceImp implements UserService {
 
         User savedUser = userRepository.save(newUser);
         log.info("User created successfully with id: {}", savedUser.getId());
-        
+
         return createUserSummaryDto(savedUser);
     }
 
@@ -121,7 +120,10 @@ public class UserServiceImp implements UserService {
         log.info("User with id: {} successfully deleted", id);
     }
 
-    public LoginResponseDto login(String email, String password){
+    public LoginResponseDto login(LoginRequestDto request){
+        String email = request.getEmail();
+        String password = request.getPassword();
+
         log.info("Logging in user with email: {}", email);
         boolean isEmailPresent = userRepository.existsByEmail(email);
 
@@ -146,16 +148,16 @@ public class UserServiceImp implements UserService {
         return new LoginResponseDto(createUserSummaryDto(user), jwtToken);
     }
 
-    public Optional<User> findByEmail(String email){
+    public UserSummaryDto findByEmail(String email) {
         log.info("Fetching user with email: {}", email);
-        boolean isEmailPresent = userRepository.existsByEmail(email);
 
-        if (!isEmailPresent) {
+        if (!userRepository.existsByEmail(email)) {
             log.warn("User with email: {} does not exist", email);
             throw new EmailDoesNotExistException("Email does not exist");
         }
 
-        return Optional.ofNullable(userRepository.findUserByEmail(email));
+        User user = userRepository.findUserByEmail(email);
+        return createUserSummaryDto(user);
     }
 
     public Page<UserSummaryDto> getAllUsers(Pageable pageable){
