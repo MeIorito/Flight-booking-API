@@ -21,6 +21,13 @@ public class RegisterFlightDto {
     @Max(value = SEATS_MAX, message = SEATS_MAX_MESSAGE)
     private Integer seats;
 
+    public RegisterFlightDto(String origin, String destination, String date, Integer seats) {
+        this.origin = origin;
+        this.destination = destination;
+        this.date = date;
+        this.seats = seats;
+    }
+
     public String getOrigin() {
         return origin;
     }

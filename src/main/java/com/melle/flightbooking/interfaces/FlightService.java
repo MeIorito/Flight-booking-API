@@ -15,4 +15,5 @@ public interface FlightService {
     FlightSummaryDto getFlightById(Integer id);
     Page<FlightSummaryDto> getAllFlights(Pageable pageable);
     Page<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable);
+    Integer getAvailableSeatsByFlightId(Integer id);
 }
