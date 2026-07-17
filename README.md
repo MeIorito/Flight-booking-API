@@ -1,10 +1,10 @@
-# ✈️ Flight Booking API
+# Flight Booking API
 
 A RESTful backend API for managing flights, users, and bookings — built with Java 17, Spring Boot 3, PostgreSQL, and secured with JWT authentication.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#features)
 - [Tech Stack](#tech-stack)
@@ -30,6 +30,7 @@ A RESTful backend API for managing flights, users, and bookings — built with J
 - Input validation with detailed error responses
 - Swagger UI for interactive API exploration
 - Dockerized setup with PostgreSQL
+- Unit tests for service and controller layers
 
 ---
 
@@ -45,6 +46,7 @@ A RESTful backend API for managing flights, users, and bookings — built with J
 | Validation | Jakarta Validation |
 | Documentation | SpringDoc OpenAPI (Swagger) |
 | Containerization | Docker + Docker Compose |
+| Testing | JUnit 5 + Mockito |
 
 ---
 
@@ -73,7 +75,7 @@ DB_PASSWORD=
 JWT_SECRET=
 ```
 
-> ⚠️ Never commit your `.env` file — it is already in `.gitignore`.
+Never commit your `.env` file — it is already in `.gitignore`.
 
 ### Run with Docker
 
@@ -147,7 +149,7 @@ src/main/java/com/melle/flightbooking/
 
 ## Authentication
 
-The API uses **JWT Bearer token** authentication.
+The API uses JWT Bearer token authentication.
 
 **1. Register an account:**
 
@@ -167,7 +169,7 @@ POST /api/v1/auth/login
 Authorization: Bearer <your_token>
 ```
 
-In Swagger UI, click the **Authorize** button (top right) and paste your token there.
+In Swagger UI, click the Authorize button (top right) and paste your token there.
 
 ### Roles
 
@@ -193,6 +195,7 @@ In Swagger UI, click the **Authorize** button (top right) and paste your token t
 |---|---|---|---|
 | GET | `/api/v1/flights?page=0&size=10` | Authenticated | Get all flights (paginated) |
 | GET | `/api/v1/flights/{id}` | Authenticated | Get flight by ID |
+| GET | `/api/v1/flights/{id}/availability` | Authenticated | Get available seats for a flight |
 | GET | `/api/v1/flights/search?origin=&destination=&date=&seats=` | Authenticated | Search flights by filters |
 | POST | `/api/v1/flights` | Admin | Create a new flight |
 | PUT | `/api/v1/flights/origin` | Admin | Update flight origin |
