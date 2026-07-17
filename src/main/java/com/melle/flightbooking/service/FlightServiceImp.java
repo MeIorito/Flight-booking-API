@@ -155,6 +155,13 @@ public class FlightServiceImp implements FlightService {
                         .map(this::createFlightSummaryDto);
     }
 
+    public Integer getAvailableSeatsByFlightId(Integer id) {
+        log.info("Getting available seats from flight with id: {}", id);
+        idIsPresent(id);
+
+        return flightRepository.findFlightById(id).getSeats();
+    }
+
     /*
     HELPER FUNCTIONS
      */

@@ -147,4 +147,10 @@ public class FlightController {
 
         return flightService.getFlightsByFilter(origin, destination, date, seats, pageable);
     }
+
+    @Operation(summary = "Checking and giving back the available seat count for given flight id")
+    @GetMapping("/{id}/availability")
+    public Integer getAvailableSeatsByFlightId(@PathVariable int id) {
+        return flightService.getAvailableSeatsByFlightId(id);
+    }
 }
