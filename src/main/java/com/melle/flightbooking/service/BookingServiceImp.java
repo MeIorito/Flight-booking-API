@@ -14,6 +14,7 @@ import com.melle.flightbooking.repository.UserRepository;
 import com.melle.flightbooking.specifications.BookingSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -98,6 +99,7 @@ public class BookingServiceImp implements BookingService {
 
     // Nested db searches, need to look into this
     @Override
+    @Cacheable(value = "bookingCache")
     public Page<BookingSummaryDto> getBookingsByUserId(Integer id, Pageable pageable) {
         log.info("Fetching bookings for user with id: {} - page: {}, size: {}", id, pageable.getPageNumber(), pageable.getPageSize());
 
@@ -169,6 +171,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
+    @Cacheable(value = "bookingCache")
     public BookingSummaryDto getBookingById(Integer userId, Integer bookingId) {
         log.info("Fetching booking with id: {} for user with id: {}", bookingId, userId);
 
@@ -187,6 +190,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
+    @Cacheable(value = "bookingCache")
     public Page<BookingSummaryDto> getAllBookings(Pageable pageable) {
         log.info("Fetching all bookings");
 

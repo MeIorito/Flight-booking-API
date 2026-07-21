@@ -9,6 +9,7 @@ import com.melle.flightbooking.repository.FlightRepository;
 import com.melle.flightbooking.specifications.FlightSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -107,6 +108,7 @@ public class FlightServiceImp implements FlightService {
     }
 
     @Override
+    @Cacheable(value = "flightCache")
     public FlightSummaryDto getFlightById(Integer id) {
         log.info("Fetching flight with id: {}", id);
 
@@ -120,6 +122,7 @@ public class FlightServiceImp implements FlightService {
     }
 
     @Override
+    @Cacheable(value = "flightCache")
     public Page<FlightSummaryDto> getAllFlights(Pageable pageable) {
         log.info("Fetching all flights");
 
@@ -127,6 +130,7 @@ public class FlightServiceImp implements FlightService {
                 .map(this::createFlightSummaryDto);
     }
 
+    @Cacheable(value = "flightCache")
     public Page<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable) {
         log.info("Fetching flights with filters - origin: {}, destination: {}, date: {}, seats: {}", origin, destination, date, seats);
 
@@ -155,6 +159,7 @@ public class FlightServiceImp implements FlightService {
                         .map(this::createFlightSummaryDto);
     }
 
+    @Cacheable(value = "flightSeatCache")
     public Integer getAvailableSeatsByFlightId(Integer id) {
         log.info("Getting available seats from flight with id: {}", id);
         idIsPresent(id);

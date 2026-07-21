@@ -13,6 +13,7 @@ import com.melle.flightbooking.repository.UserRepository;
 import com.melle.flightbooking.specifications.UserSpecifications;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -148,6 +149,7 @@ public class UserServiceImp implements UserService {
         return new LoginResponseDto(createUserSummaryDto(user), jwtToken);
     }
 
+    @Cacheable(value = "userCache")
     public UserSummaryDto findByEmail(String email) {
         log.info("Fetching user with email: {}", email);
 
@@ -160,11 +162,13 @@ public class UserServiceImp implements UserService {
         return createUserSummaryDto(user);
     }
 
+    @Cacheable(value = "userCache")
     public Page<UserSummaryDto> getAllUsers(Pageable pageable){
         log.info("Fetching all users");
         return userRepository.findBy(UserSummaryDto.class, pageable);
     }
 
+    @Cacheable(value = "userCache")
     public Page<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable) {
         log.info("Fetching users with filters - username: {}, email: {}, role: {}", username, email, role);
 
