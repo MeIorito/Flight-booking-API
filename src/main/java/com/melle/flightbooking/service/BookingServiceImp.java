@@ -1,6 +1,7 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.dto.booking.*;
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.exception.BookingOwnershipException;
 import com.melle.flightbooking.exception.FlightNotFoundException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
@@ -98,15 +99,18 @@ public class BookingServiceImp implements BookingService {
 
     // Nested db searches, need to look into this
     @Override
-    @Cacheable(value = "bookingCache")
-    public Page<BookingSummaryDto> getBookingsByUserId(Integer id, Pageable pageable) {
+    @Cacheable(
+            value = "bookingCache",
+            key = "'user_' + #id + '_p' + #pageable.pageNumber + '_s' + #pageable.pageSize + '_sort_' + #pageable.sort.toString()"
+    )
+    public CustomPage<BookingSummaryDto> getBookingsByUserId(Integer id, Pageable pageable) {
         log.info("Fetching bookings for user with id: {} - page: {}, size: {}", id, pageable.getPageNumber(), pageable.getPageSize());
 
-        Page<BookingSummaryDto> page = bookingRepository.findAll(BookingSpecifications.hasUserId(id), pageable)
+        Page<BookingSummaryDto> dtoPage = bookingRepository.findAll(BookingSpecifications.hasUserId(id), pageable)
                 .map(this::createBookingSummaryDto);
 
-        log.info("Found {} bookings for user with id: {}", page.getSize(), id);
-        return page;
+        log.info("Found {} bookings for user with id: {}", dtoPage.getSize(), id);
+        return CustomPage.from(dtoPage);
     }
 
     @Override
@@ -170,7 +174,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    @Cacheable(value = "bookingCache")
+    @Cacheable(value = "bookingCache", key = "'booking_' + #bookingId")
     public BookingSummaryDto getBookingById(Integer userId, Integer bookingId) {
         log.info("Fetching booking with id: {} for user with id: {}", bookingId, userId);
 
@@ -189,14 +193,19 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    @Cacheable(value = "bookingCache")
-    public Page<BookingSummaryDto> getAllBookings(Pageable pageable) {
+    @Cacheable(
+            value = "bookingCache",
+            key = "'all_p' + #pageable.pageNumber + '_s' + #pageable.pageSize + '_sort_' + #pageable.sort.toString()"
+    )
+    public CustomPage<BookingSummaryDto> getAllBookings(Pageable pageable) {
         log.info("Fetching all bookings");
 
         Specification<Booking> spec = Specification.where(null);
 
-        return bookingRepository.findAll(spec, pageable)
+        Page<BookingSummaryDto> dtoPage = bookingRepository.findAll(spec, pageable)
                 .map(this::createBookingSummaryDto);
+
+        return CustomPage.from(dtoPage);
     }
 
     /*

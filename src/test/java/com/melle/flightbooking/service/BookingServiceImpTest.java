@@ -1,6 +1,7 @@
 package com.melle.flightbooking.service;
 
 import com.melle.flightbooking.dto.booking.*;
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.exception.BookingOwnershipException;
 import com.melle.flightbooking.exception.FlightNotFoundException;
 import com.melle.flightbooking.exception.IdDoesNotExistException;
@@ -157,7 +158,7 @@ class BookingServiceImpTest {
 
         when(bookingRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(bookingPage);
 
-        Page<BookingSummaryDto> result = bookingService.getBookingsByUserId(1, PageRequest.of(0, 10));
+        CustomPage<BookingSummaryDto> result = bookingService.getBookingsByUserId(1, PageRequest.of(0, 10));
 
         assertEquals(1, result.getTotalElements());
         assertEquals("Amsterdam", result.getContent().get(0).getOrigin());
@@ -315,7 +316,7 @@ class BookingServiceImpTest {
 
         when(bookingRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(bookingPage);
 
-        Page<BookingSummaryDto> result = bookingService.getAllBookings(PageRequest.of(0, 10));
+        CustomPage<BookingSummaryDto> result = bookingService.getAllBookings(PageRequest.of(0, 10));
 
         assertEquals(1, result.getTotalElements());
         assertEquals("Amsterdam", result.getContent().get(0).getOrigin());
