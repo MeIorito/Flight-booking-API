@@ -4,6 +4,7 @@ import com.melle.flightbooking.config.JwtUtil;
 import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.exception.*;
 import com.melle.flightbooking.interfaces.UserService;
@@ -162,14 +163,19 @@ public class UserServiceImp implements UserService {
         return createUserSummaryDto(user);
     }
 
-    @Cacheable(value = "userCache")
-    public Page<UserSummaryDto> getAllUsers(Pageable pageable){
+    @Cacheable(value = "userCache", key = "'all_u' + #pageable.pageNumber + '_s' + #pageable.pageSize")
+    public CustomPage<UserSummaryDto> getAllUsers(Pageable pageable){
         log.info("Fetching all users");
-        return userRepository.findBy(UserSummaryDto.class, pageable);
+
+        Page<UserSummaryDto> dtoPage = userRepository.findBy(UserSummaryDto.class, pageable);
+        return CustomPage.from(dtoPage);
     }
 
-    @Cacheable(value = "userCache")
-    public Page<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable) {
+    @Cacheable(
+            value = "userCache",
+            key = "'filter_u' + #username + '_e' + #email + '_r' + #role + '_p' + #pageable.pageNumber + '_s' + #pageable.pageSize"
+    )
+    public CustomPage<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable) {
         log.info("Fetching users with filters - username: {}, email: {}, role: {}", username, email, role);
 
         Specification<User> spec = Specification.where(null);
@@ -189,7 +195,9 @@ public class UserServiceImp implements UserService {
         Page<User> filteredUsers = userRepository.findAll(spec, pageable);
         log.info("Found {} users matching filters", filteredUsers.getSize());
 
-        return filteredUsers.map(this::createUserSummaryDto);
+        Page<UserSummaryDto> dtoPage = filteredUsers.map(this::createUserSummaryDto);
+
+        return CustomPage.from(dtoPage);
     }
 
     /*

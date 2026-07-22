@@ -3,6 +3,7 @@ package com.melle.flightbooking.interfaces;
 import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.model.RoleEnum;
 import com.melle.flightbooking.model.User;
@@ -20,6 +21,6 @@ public interface UserService {
     UserSummaryDto updateEmailById(Integer id, String email);
     UserSummaryDto updatePasswordById(Integer id, String password);
     UserSummaryDto updateRoleById(Integer id, RoleEnum role);
-    Page<UserSummaryDto> getAllUsers(Pageable pageable);
-    Page<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable);
+    CustomPage<UserSummaryDto> getAllUsers(Pageable pageable);
+    CustomPage<UserSummaryDto> getUsersByFilters(String username, String email, RoleEnum role, Pageable pageable);
 }

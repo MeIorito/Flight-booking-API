@@ -4,6 +4,7 @@ import com.melle.flightbooking.config.JwtUtil;
 import com.melle.flightbooking.dto.auth.LoginRequestDto;
 import com.melle.flightbooking.dto.auth.LoginResponseDto;
 import com.melle.flightbooking.dto.auth.RegisterRequestDto;
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.user.UserSummaryDto;
 import com.melle.flightbooking.exception.EmailAlreadyExistsException;
 import com.melle.flightbooking.exception.EmailDoesNotExistException;
@@ -322,7 +323,7 @@ class UserServiceImpTest {
 
         when(userRepository.findBy(UserSummaryDto.class, pageable)).thenReturn(page);
 
-        Page<UserSummaryDto> result = userService.getAllUsers(pageable);
+        CustomPage<UserSummaryDto> result = userService.getAllUsers(pageable);
 
         assertEquals(user1, result.getContent().get(0));
         assertEquals(user2, result.getContent().get(1));

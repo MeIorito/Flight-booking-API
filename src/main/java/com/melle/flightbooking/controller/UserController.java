@@ -1,6 +1,7 @@
 package com.melle.flightbooking.controller;
 
 import com.melle.flightbooking.dto.*;
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.user.UpdateEmailAdminDto;
 import com.melle.flightbooking.dto.user.UpdatePasswordAdminDto;
 import com.melle.flightbooking.dto.user.UpdateUsernameAdminDto;
@@ -145,7 +146,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public Page<UserSummaryDto> getAllUsers(
+    public CustomPage<UserSummaryDto> getAllUsers(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ){
@@ -162,7 +163,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/search")
-    public Page<UserSummaryDto> getUsersByFilters(
+    public CustomPage<UserSummaryDto> getUsersByFilters(
             @RequestParam (required = false) String username,
             @RequestParam (required = false) String email,
             @RequestParam (required = false) RoleEnum role,
