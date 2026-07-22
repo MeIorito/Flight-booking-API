@@ -163,7 +163,7 @@ public class UserServiceImp implements UserService {
         return createUserSummaryDto(user);
     }
 
-    @Cacheable(value = "userCache", key = "'all_u' + #pageable.pageNumber + '_s' + #pageable.pageSize")
+    @Cacheable(value = "userCache", key = "'all_u' + '_n' + #pageable.pageNumber + '_s' + #pageable.pageSize")
     public CustomPage<UserSummaryDto> getAllUsers(Pageable pageable){
         log.info("Fetching all users");
 
