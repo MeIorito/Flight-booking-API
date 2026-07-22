@@ -1,5 +1,6 @@
 package com.melle.flightbooking.service;
 
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
 import com.melle.flightbooking.exception.FlightNotFoundException;
@@ -122,16 +123,23 @@ public class FlightServiceImp implements FlightService {
     }
 
     @Override
-    @Cacheable(value = "flightCache")
-    public Page<FlightSummaryDto> getAllFlights(Pageable pageable) {
+    @Cacheable(
+            value = "flightCache", key = "'all_f' + '_n' + #pageable.pageNumber + '_s' + #pageable.pageSize"
+    )
+    public CustomPage<FlightSummaryDto> getAllFlights(Pageable pageable) {
         log.info("Fetching all flights");
 
-        return flightRepository.findAll(pageable)
+        Page<FlightSummaryDto> dtoPage = flightRepository.findAll(pageable)
                 .map(this::createFlightSummaryDto);
+
+        return CustomPage.from(dtoPage);
     }
 
-    @Cacheable(value = "flightCache")
-    public Page<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable) {
+    @Cacheable(
+            value = "flightCache",
+            key = "'filter_o' + #origin + '_d' + #destination + '_dt' + #date + '_s' + #seats + '_p' + #pageable.pageNumber + '_s' + #pageable.pageSize"
+    )
+    public CustomPage<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable) {
         log.info("Fetching flights with filters - origin: {}, destination: {}, date: {}, seats: {}", origin, destination, date, seats);
 
         Specification<Flight> spec = Specification.where(null);
@@ -155,11 +163,13 @@ public class FlightServiceImp implements FlightService {
         Page<Flight> filteredFlights = flightRepository.findAll(spec, pageable);
         log.info("Found {} flights matching filters", filteredFlights.getSize());
 
-        return filteredFlights
-                        .map(this::createFlightSummaryDto);
+        Page<FlightSummaryDto> dtoPage = filteredFlights
+                .map(this::createFlightSummaryDto);
+
+        return CustomPage.from(dtoPage);
     }
 
-    @Cacheable(value = "flightSeatCache")
+    @Cacheable(value = "flightSeatCache", key = "#id")
     public Integer getAvailableSeatsByFlightId(Integer id) {
         log.info("Getting available seats from flight with id: {}", id);
         idIsPresent(id);

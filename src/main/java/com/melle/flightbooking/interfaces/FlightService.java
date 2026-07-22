@@ -1,5 +1,6 @@
 package com.melle.flightbooking.interfaces;
 
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
 import org.springframework.data.domain.Page;
@@ -13,7 +14,7 @@ public interface FlightService {
     FlightSummaryDto updateSeatsById(Integer id, Integer seats);
     void deleteFlightById(Integer id);
     FlightSummaryDto getFlightById(Integer id);
-    Page<FlightSummaryDto> getAllFlights(Pageable pageable);
-    Page<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable);
+    CustomPage<FlightSummaryDto> getAllFlights(Pageable pageable);
+    CustomPage<FlightSummaryDto> getFlightsByFilter(String origin, String destination, String date, Integer seats, Pageable pageable);
     Integer getAvailableSeatsByFlightId(Integer id);
 }

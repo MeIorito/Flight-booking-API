@@ -1,5 +1,6 @@
 package com.melle.flightbooking.service;
 
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.flight.FlightSummaryDto;
 import com.melle.flightbooking.dto.flight.RegisterFlightDto;
 import com.melle.flightbooking.exception.FlightNotFoundException;
@@ -109,7 +110,7 @@ public class FlightServiceImpTest {
 
         when(flightRepository.findAll(any(Pageable.class))).thenReturn(flightPage);
 
-        Page<FlightSummaryDto> result = flightServiceImp.getAllFlights(PageRequest.of(0, 10));
+        CustomPage<FlightSummaryDto> result = flightServiceImp.getAllFlights(PageRequest.of(0, 10));
 
         assertEquals(2, result.getTotalElements());
         assertEquals("Amsterdam", result.getContent().get(0).origin());
@@ -123,7 +124,7 @@ public class FlightServiceImpTest {
 
         when(flightRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(flightPage);
 
-        Page<FlightSummaryDto> result = flightServiceImp.getFlightsByFilter("Amsterdam", null, null, null, PageRequest.of(0, 10));
+        CustomPage<FlightSummaryDto> result = flightServiceImp.getFlightsByFilter("Amsterdam", null, null, null, PageRequest.of(0, 10));
 
         assertEquals(1, result.getTotalElements());
         assertEquals("Amsterdam", result.getContent().get(0).origin());
@@ -137,7 +138,7 @@ public class FlightServiceImpTest {
 
         when(flightRepository.findAll(any(Specification.class), any(Pageable.class))).thenReturn(flightPage);
 
-        Page<FlightSummaryDto> result = flightServiceImp.getFlightsByFilter(null, null, null, null, PageRequest.of(0, 10));
+        CustomPage<FlightSummaryDto> result = flightServiceImp.getFlightsByFilter(null, null, null, null, PageRequest.of(0, 10));
 
         assertEquals(2, result.getTotalElements());
     }

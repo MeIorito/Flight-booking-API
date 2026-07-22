@@ -1,5 +1,6 @@
 package com.melle.flightbooking.controller;
 
+import com.melle.flightbooking.dto.common.CustomPage;
 import com.melle.flightbooking.dto.flight.*;
 import com.melle.flightbooking.interfaces.FlightService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -111,7 +112,7 @@ public class FlightController {
             @ApiResponse(responseCode = "401", description = "Valid jwt required"),
     })
     @GetMapping()
-    public Page<FlightSummaryDto> getAllFlights(
+    public CustomPage<FlightSummaryDto> getAllFlights(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ){
@@ -135,7 +136,7 @@ public class FlightController {
 
     @Operation(summary = "Getting all flights based on origin, destination, date and seats filters")
     @GetMapping("/search")
-    public Page<FlightSummaryDto> getFlightsByFilters(
+    public CustomPage<FlightSummaryDto> getFlightsByFilters(
             @RequestParam (required = false) String origin,
             @RequestParam (required = false) String destination,
             @RequestParam (required = false) String date,
